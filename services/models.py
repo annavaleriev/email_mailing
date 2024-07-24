@@ -38,9 +38,9 @@ class SendMail(models.Model):
     """Модель для хранения данных о письмах"""
 
     PERIODICITY_CHOICES = (
-        ('once', 'Один раз в день'),
-        ('weekly', 'Один раз в неделю'),
-        ('monthly', 'Один раз в месяц'),
+        ("once", "Один раз в день"),
+        ("weekly", "Один раз в неделю"),
+        ("monthly", "Один раз в месяц"),
     )
 
     STATUS_MAIL = (
