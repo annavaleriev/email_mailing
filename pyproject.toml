@@ -11,6 +11,27 @@ django = "^5.0.7"
 python-dotenv = "^1.0.1"
 
 
+[tool.poetry.group.linters.dependencies]
+black = "^24.4.2"
+isort = "^5.13.2"
+flake8 = "^7.1.0"
+
+[tool.black]
+line-length = 119
+exclude = '''
+(
+  /(       # Исключить несколько общих каталогов
+    | \.git          # в корне проекта
+    | \.venv
+    | \__pycache__
+  )/
+)
+'''
+
+[tool.isort]
+line_length = 119
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
