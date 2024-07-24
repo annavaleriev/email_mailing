@@ -49,20 +49,18 @@ class SendMail(models.Model):
         ("end", "Завершено"),
     )
 
-    date_start_send = models.DateTimeField(verbose_name="Дата первой отправки рассылки")
-    date_end_send = models.DateTimeField(verbose_name="Дата окончания отправки")
-    time_first_send = models.TimeField(verbose_name="Время первой отправки рассылки")
+    date_start_send = models.DateTimeField(verbose_name="Дата и время первой отправки рассылки")
     periodicity = models.CharField(max_length=10, choices=PERIODICITY_CHOICES, verbose_name="Периодичность рассылки")
     status = models.CharField(max_length=10, choices=STATUS_MAIL, default="created", verbose_name="Статус рассылки")
-    subject = models.CharField(max_length=150, verbose_name="Тема")
+    # subject = models.CharField(max_length=150, verbose_name="Тема")
     # message = models.TextField(verbose_name="Сообщение")
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
 
     # client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name="Клиент")
-    client = models.ManyToManyField(Client, related_name="client", verbose_name="Клиент")
+    clients = models.ManyToManyField(Client, related_name="clients", verbose_name="Клиенты")
 
     def __str__(self):
-        return f"Рассылка: {self.subject} - Статус: {self.status}"
+        return f"Рассылка: {self.message} - Статус: {self.status}"
 
     class Meta:
         verbose_name = "Рассылка"
@@ -74,7 +72,7 @@ class Logs(models.Model):
 
     date_and_time_last_send = models.DateTimeField(verbose_name="Дата и время последней отправки")
     status_send = models.BooleanField(default=False, verbose_name="Статус отправки")
-    error_message = models.TextField(max_length=200, verbose_name="Сообщение об ошибке", **NULLABLE)
+    server_message = models.TextField(max_length=200, verbose_name="Ответ почтового сервера", **NULLABLE)
 
     def __str__(self):
         return f"Дата рассылки: {self.date_and_time_last_send} - Статус: {self.status_send}"
