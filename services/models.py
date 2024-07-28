@@ -11,6 +11,7 @@ class Client(models.Model):
     surname = models.CharField(max_length=50, verbose_name="Отчество")
     email = models.EmailField(verbose_name="Почта")
     comment = models.TextField(verbose_name="Комментарий", **NULLABLE)
+    is_blocked = models.BooleanField(default=False, verbose_name="Заблокирован")  # Проверка на блокировку
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -52,11 +53,7 @@ class SendMail(models.Model):
     date_start_send = models.DateTimeField(verbose_name="Дата и время первой отправки рассылки")
     periodicity = models.CharField(max_length=10, choices=PERIODICITY_CHOICES, verbose_name="Периодичность рассылки")
     status = models.CharField(max_length=10, choices=STATUS_MAIL, default="created", verbose_name="Статус рассылки")
-    # subject = models.CharField(max_length=150, verbose_name="Тема")
-    # message = models.TextField(verbose_name="Сообщение")
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
-
-    # client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name="Клиент")
     clients = models.ManyToManyField(Client, related_name="clients", verbose_name="Клиенты")
 
     def __str__(self):
@@ -65,6 +62,10 @@ class SendMail(models.Model):
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
+        permissions = [  # Права доступа что бы можно было управлять рассылками
+            ("disable_sendmail", "Может отключать рассылки"),
+            ("block_user", "Может блокировать пользователей"),
+        ]
 
 
 class Logs(models.Model):

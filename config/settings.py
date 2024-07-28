@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -42,7 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "services",
-    "user",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -145,8 +147,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 # SERVER_EMAIL = EMAIL_HOST_USER
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-AUTH_USER_MODEL = "user.User"
+AUTH_USER_MODEL = "users.User"
 
 # LOGIN_REDIRECT_URL = "/"  # редирект после успешного входа на главную страницу
 # LOGOUT_REDIRECT_URL = "/"
-
