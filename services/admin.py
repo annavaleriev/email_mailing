@@ -7,12 +7,12 @@ from services.models import Client, Logs, Message, SendMail
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ("first_name", "last_name", "surname", "email", "comment", "is_blocked")
-    search_fields = ("first_name", "last_name", "surname", "email", "is_blocked")
-    list_filter = ("first_name", "last_name", "surname", "email", "comment", "is_blocked")
+    list_display = ("first_name", "last_name", "surname", "email", "comment")
+    search_fields = ("first_name", "last_name", "surname", "email")
+    list_filter = ("first_name", "last_name", "surname", "email", "comment")
     ordering = ("last_name",)  # Сортировка по фамилии
-    list_editable = ("is_blocked",)  # Редактирование статуса блокировки клиента прямо там
-    readonly_fields = ("email",)  # Поле только для чтения, нельзя менять email
+    # list_editable = ("is_blocked",)  # Редактирование статуса блокировки клиента прямо там
+    # readonly_fields = ("email",)  # Поле только для чтения, нельзя менять email
     list_per_page = 20
     search_help_text = "Лучше искать клиента  фамилии или email клиента"
 
@@ -26,23 +26,24 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(SendMail)
 class SendMailAdmin(admin.ModelAdmin):
-    list_display = ("date_start_send", "periodicity", "status", "message", "get_clients")
+    list_display = ("date_start_send", "periodicity", "status", "message", "get_clients", "is_active")
     search_fields = ("date_start_send", "periodicity", "status", "message")
-    list_filter = ("date_start_send", "periodicity", "status", "message")
-    readonly_fields = ("date_start_send",)  # Поле только для чтения, нельзя менять дату отправки
-    ordering = ("date_start_send",)
+    list_filter = ("is_active", "date_start_send", "periodicity", "status", "message")
+    readonly_fields = ("status",)  # Поле только для чтения, нельзя менять дату отправки
+    ordering = ("is_active", "date_start_send",)
     list_per_page = 30
-    list_editable = ("status",)  # Редактирование статуса рассылки, только нафига это надо?
+    # list_editable = ("status",)  # Редактирование статуса рассылки, только нафига это надо?
     search_help_text = "Лучше искать рассылку по дате и клиенту"
     fieldsets = (
-        (None, {"fields": ("date_start_send", "periodicity", "status")}),
+        (None, {"fields": ("is_active", "date_start_send", "periodicity", "status")}),
         (
             "Message & Clients",
             {
                 "fields": ("message", "clients"),
             },
         ),
-    )  # Группировка полей в админке, не знаю что  это, но вот и посмотрю
+    )  # Группировка полей в админке, не знаю что это, но вот и посмотрю
+    filter_horizontal = ("clients", )
 
     def get_clients(self, obj):  # Это метод для вывода всех клиентов в рассылке
         return ", ".join([client.email for client in obj.clients.all()])  # Вывод всех клиентов в рассылке

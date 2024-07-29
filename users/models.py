@@ -45,8 +45,6 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to="user/", verbose_name="Аватар", **NULLABLE)  # Поле для аватара
     token = models.CharField(max_length=150, verbose_name="Токен", **NULLABLE)  # Поле для токена
 
-    is_manager = models.BooleanField(default=False, verbose_name="Является менеджером")  # Поле для менеджера
-
     USERNAME_FIELD = "email"  # Поле для имени пользователя
     REQUIRED_FIELDS = []  # Поля, которые обязательны для заполнения
 
@@ -60,3 +58,6 @@ class User(AbstractUser):
 
         verbose_name = "Пользователь"  # Название модели в единственном числе
         verbose_name_plural = "Пользователи"  # Название модели во множественном числе
+        permissions = [  # Права доступа что бы можно было управлять рассылками
+            ("block_user", "Может блокировать пользователей"),
+        ]

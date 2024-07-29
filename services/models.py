@@ -11,7 +11,6 @@ class Client(models.Model):
     surname = models.CharField(max_length=50, verbose_name="Отчество")
     email = models.EmailField(verbose_name="Почта")
     comment = models.TextField(verbose_name="Комментарий", **NULLABLE)
-    is_blocked = models.BooleanField(default=False, verbose_name="Заблокирован")  # Проверка на блокировку
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -49,7 +48,7 @@ class SendMail(models.Model):
         ("sent", "Отправлено"),
         ("end", "Завершено"),
     )
-
+    is_active = models.BooleanField("Активна", default=True)
     date_start_send = models.DateTimeField(verbose_name="Дата и время первой отправки рассылки")
     periodicity = models.CharField(max_length=10, choices=PERIODICITY_CHOICES, verbose_name="Периодичность рассылки")
     status = models.CharField(max_length=10, choices=STATUS_MAIL, default="created", verbose_name="Статус рассылки")
@@ -64,7 +63,6 @@ class SendMail(models.Model):
         verbose_name_plural = "Рассылки"
         permissions = [  # Права доступа что бы можно было управлять рассылками
             ("disable_sendmail", "Может отключать рассылки"),
-            ("block_user", "Может блокировать пользователей"),
         ]
 
 
