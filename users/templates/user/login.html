@@ -1,0 +1,50 @@
+{% extends "includes/base.html" %}
+
+{% block content %}
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ form.as_p }}
+                                {% for message in messages %}
+                                    {{ message }}
+                                {% endfor %}
+                            </div>
+                            <button type="submit" class="btn btn-success mt-3">Войти</button>
+{#                            <a class="btn btn-success mt-3" href={% url 'user:password_reset' %}>Сбросить пароль</a>#}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{#{% extends "includes/base.html" %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="container text-center">#}
+{#        <div class="row">#}
+{#            <div class="col-12">#}
+{#                <div class="card">#}
+{#                    <div class="card-body">#}
+{#                        <form method="post" action="{% url 'user:login' %}">#}
+{#                            {% csrf_token %}#}
+{#                            <div class="form-group">#}
+{#                                {{ form.as_p }}#}
+{#                                {% for message in messages %}#}
+{#                                    {{ message }}#}
+{#                                {% endfor %}#}
+{#                            </div>#}
+{#                            <button type="submit" class="btn btn-success mt-3">Войти</button>#}
+{#                        </form>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
