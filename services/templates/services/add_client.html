@@ -1,0 +1,11 @@
+{% extends "includes/base.html" %}
+
+{% block content %}
+    <h1>Добавить клиента</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+    <a href="{% url 'services:client_list' %}">Вернуться к списку клиентов</a>
+{% endblock %}

@@ -1,4 +1,6 @@
-from django.forms import BooleanField
+from django.forms import BooleanField, ModelForm, DateTimeInput, CheckboxSelectMultiple
+
+from services.models import SendMail, Client
 
 
 class StyleFormMixin:
@@ -11,3 +13,23 @@ class StyleFormMixin:
                 field.widget.attrs["class"] = "form-check-input"  # добавляем класс form-check-input
             else:
                 field.widget.attrs["class"] = "form-control"  # добавляем класс form-control
+
+
+class SendMailForm(StyleFormMixin, ModelForm):
+    """Форма для создания рассылки"""
+
+    class Meta:
+        model = SendMail
+        fields = ['date_start_send', 'periodicity', 'status', 'message', 'clients']
+        widgets = { # добавляем виджеты для полей формы
+            "date_start_send": DateTimeInput(attrs={"type": "datetime-local"}),
+            "clients": CheckboxSelectMultiple,
+        }
+
+
+class AddClientForm(StyleFormMixin, ModelForm):
+    """Форма для добавления клиента"""
+
+    class Meta:
+        model = Client
+        fields = "__all__"
