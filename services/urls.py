@@ -1,9 +1,8 @@
 from django.urls import path
 
 from services.apps import ServicesConfig
-from services.forms import AddClientForm
 from services.views import (ClientCreateView, ClientDeleteView, ClientDetailView, ClientListView, ClientUpdateView,
-                            HomeView, AddMailingView)
+                            HomeView, AddMailingView, AddClientView)
 
 app_name = ServicesConfig.name
 # app_name = 'services'
@@ -12,7 +11,8 @@ app_name = ServicesConfig.name
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),  # это ListView
     path("add-mailing/", AddMailingView.as_view(), name="add_mailing"),
-    path("add-client/", AddClientForm.as_view(), name="add_client"),
+    path("add-client/", AddClientView.as_view(), name="add_client"),
+    path("clients/", ClientListView.as_view(), name="client_list"),
 ]
     # path("<int:pk>/", ClientDetailView.as_view(), name="client_detail"), # это DetailView конкретретного клиента
     # path("create/", ClientCreateView.as_view(), name="client_create"), # это CreateView

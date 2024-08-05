@@ -2,12 +2,18 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from services.forms import SendMailForm, AddClientForm
-from services.models import Client, Message
+from services.models import Client, Message, SendMail
+
+
+class OwnerQuerysetViewMixin:
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(owner=self.request.user)
 
 
 # ТУТ ЕЩЕ ЧТО-ТО С КОНТАКСТОМ ДОЛЖНО БЫТЬ, СМОТРИ ПРЕД ДЗ
 class HomeView(ListView):
-    model = Message
+    model = SendMail
     template_name = "services/home.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -69,4 +75,4 @@ class AddClientView(CreateView):
     form_class = AddClientForm
     template_name = "services/add_client.html"
     # fields = "__all__"
-    success_url = reverse_lazy("client_list")
+    success_url = reverse_lazy("services:client_list")

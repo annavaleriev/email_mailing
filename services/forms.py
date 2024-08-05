@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import BooleanField, ModelForm, DateTimeInput, CheckboxSelectMultiple
 
 from services.models import SendMail, Client
@@ -23,7 +24,6 @@ class SendMailForm(StyleFormMixin, ModelForm):
         fields = ['date_start_send', 'periodicity', 'status', 'message', 'clients']
         widgets = { # добавляем виджеты для полей формы
             "date_start_send": DateTimeInput(attrs={"type": "datetime-local"}),
-            "clients": CheckboxSelectMultiple,
         }
 
 

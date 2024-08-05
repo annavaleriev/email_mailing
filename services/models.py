@@ -1,15 +1,20 @@
 from django.db import models
 
 from services.utils import NULLABLE
+from users.models import User
 
 
-class Client(models.Model):
+class OwnerMixin:
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец")
+
+
+class Client(OwnerMixin, models.Model):
     """Модель для хранения данных о клиентах"""
 
     first_name = models.CharField(max_length=50, verbose_name="Имя")
     last_name = models.CharField(max_length=50, verbose_name="Фамилия")
     surname = models.CharField(max_length=50, verbose_name="Отчество")
-    email = models.EmailField(verbose_name="Почта")
+    email = models.EmailField(verbose_name="Почта", unique=True)
     comment = models.TextField(verbose_name="Комментарий", **NULLABLE)
 
     def __str__(self):
@@ -34,7 +39,7 @@ class Message(models.Model):
         verbose_name_plural = "Сообщения"
 
 
-class SendMail(models.Model):
+class SendMail(OwnerMixin, models.Model):
     """Модель для хранения данных о письмах"""
 
     PERIODICITY_CHOICES = (
@@ -72,6 +77,7 @@ class Logs(models.Model):
     date_and_time_last_send = models.DateTimeField(verbose_name="Дата и время последней отправки")
     status_send = models.BooleanField(default=False, verbose_name="Статус отправки")
     server_message = models.TextField(max_length=200, verbose_name="Ответ почтового сервера", **NULLABLE)
+    # send_mail = models.ForeignKey(SendMail, ...)
 
     def __str__(self):
         return f"Дата рассылки: {self.date_and_time_last_send} - Статус: {self.status_send}"
