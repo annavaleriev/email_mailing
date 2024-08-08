@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import BooleanField, ModelForm, DateTimeInput, CheckboxSelectMultiple
 
-from services.models import SendMail, Client
+from services.models import SendMail, Client, Message
 
 
 class StyleFormMixin:
@@ -22,9 +22,20 @@ class SendMailForm(StyleFormMixin, ModelForm):
     class Meta:
         model = SendMail
         fields = ['date_start_send', 'periodicity', 'status', 'message', 'clients']
-        widgets = { # добавляем виджеты для полей формы
+        widgets = {  # добавляем виджеты для полей формы
             "date_start_send": DateTimeInput(attrs={"type": "datetime-local"}),
+            # добавляем виджет для поля date_start_send
         }
+
+    def __init__(self, *args, **kwargs):  # переопределяем метод __init__
+        self.request = kwargs.pop('request', None)  # извлекаем параметр request из kwargs
+        if self.request:  # если параметр request был передан
+            user = self.request.user  # получаем пользователя из request
+            super().__init__(*args, **kwargs)  # вызываем родительский метод __init__
+            self.fields['clients'].queryset = Client.objects.filter(
+                owner=user)  # фильтруем queryset для поля clients по пользователю
+        else:  # если параметр request не был передан
+            super().__init__(*args, **kwargs)  # вызываем родительский метод __init__
 
 
 class AddClientForm(StyleFormMixin, ModelForm):
@@ -32,4 +43,15 @@ class AddClientForm(StyleFormMixin, ModelForm):
 
     class Meta:
         model = Client
-        fields = "__all__"
+        exclude = ("owner",)  # исключаем поле owner из формы
+
+
+class MessageForm(StyleFormMixin, ModelForm):
+    """Форма для создания сообщения"""
+
+    class Meta:
+        model = Message
+        fields = "__all__"  # добавляем все поля модели
+        widgets = {  # добавляем виджеты для полей формы
+            "body": forms.Textarea(attrs={"rows": 5}),
+        }

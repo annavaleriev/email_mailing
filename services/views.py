@@ -1,17 +1,34 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from services.forms import SendMailForm, AddClientForm
-from services.models import Client, Message, SendMail
+from services.models import Client, Message, SendMail, Logs
 
 
 class OwnerQuerysetViewMixin:
+    """Миксин для фильтрации queryset по владельцу"""
+
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(owner=self.request.user)
+        if self.request.user.is_superuser:
+            return queryset
+        else:
+            return queryset.filter(owner=self.request.user)
 
 
-# ТУТ ЕЩЕ ЧТО-ТО С КОНТАКСТОМ ДОЛЖНО БЫТЬ, СМОТРИ ПРЕД ДЗ
+class OwnerPermissionMixin:
+    """Миксин для проверки прав доступа к объекту"""
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.owner == self.request.user or self.request.user.is_superuser:
+            return obj
+        else:
+            raise PermissionError("У вас нет прав дял работы с этим объектом")
+
+
 class HomeView(ListView):
     model = SendMail
     template_name = "services/home.html"
@@ -23,34 +40,52 @@ class HomeView(ListView):
         return context
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
+    """Список клиентов"""
     model = Client
     template_name = "services/client_list.html"
-    context_object_name = "clients"
+    # context_object_name = "clients"
+    extra_context = {"title": "Список клиентов"}  # Добавление дополнительного контекста на страницу
 
 
-class ClientDetailView(DetailView):
+class ClientDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, DetailView):
     model = Client
     template_name = "services/client_detail.html"
-    context_object_name = "client"
+    # context_object_name = "client"
+    extra_context = {"title": "Информация о клиенте"}
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
+    """Добавление клиента"""
     model = Client
-    template_name = "services/client_create.html"
-    fields = "__all__"
+    template_name = "services/add_client.html"
+    # fields = "__all__"
+    form_class = AddClientForm
     success_url = reverse_lazy("services:client_list")
 
+    def form_valid(self, form):  # Переопределение метода form_valid
+        self.object = form.save(commit=False)  # Сохранение формы, но не в базу данных
+        self.object.owner = self.request.user  # Присвоение владельца
+        self.object.save()  # Сохранение объекта
+        return super().form_valid(form)  # Вызов родительского метода form_valid
 
-class ClientUpdateView(UpdateView):
+
+class ClientUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, UpdateView):
+    """Редактирование клиента"""
     model = Client
     template_name = "services/client_update.html"
-    fields = "__all__"
-    context_object_name = "client"
+    # fields = "__all__"
+    form_class = AddClientForm
+    context_object_name = "client"  # Переопределение имени объекта в контексте
     success_url = reverse_lazy("services:client_list")
 
+    def get_success_url(self):  # Переопределение метода get_success_url
+        return reverse_lazy("services:client_detail",
+                            kwargs={"pk": self.object.pk})  # Возврат ссылки на страницу детальной информации о клиенте
 
-class ClientDeleteView(DeleteView):
+
+class ClientDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, DeleteView):
+    """Удаление клиента"""
     model = Client
     template_name = "services/client_delete.html"
     context_object_name = "client"
@@ -62,17 +97,105 @@ class ClientDeleteView(DeleteView):
 #     template_name = "services/message_list.html"
 #     context_object_name = "message"
 
-class AddMailingView(CreateView):
-    model = Message
+
+class SendMailListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
+    """Список рассылок"""
+    model = SendMail
+    template_name = "services/sendmail_list.html"
+    form_class = SendMailForm
+    extra_context = {"title": "Список рассылок"}
+
+
+class SendMailDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, DetailView):
+    """Информация о рассылке"""
+    model = SendMail
+    template_name = "services/sendmail_detail.html"
+    context_object_name = "sendmail"
+    extra_context = {"title": "Информация о рассылке"}
+
+
+class SendMailCreateView(LoginRequiredMixin, CreateView):
+    """Добавление рассылки"""
+    model = SendMail
     form_class = SendMailForm
     template_name = "services/add_mailing.html"
     # fields = "__all__"
     success_url = reverse_lazy("services:home")
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
-class AddClientView(CreateView):
-    model = Client
-    form_class = AddClientForm
-    template_name = "services/add_client.html"
-    # fields = "__all__"
-    success_url = reverse_lazy("services:client_list")
+    def get_context_data(self, **kwargs): # Переопределение метода get_context_data
+        context_data = super().get_context_data(**kwargs) # Вызов родительского метода get_context_data
+        MessagesFormSet = inlineformset_factory(SendMail, Message, fields='__all__', extra=1) # Создание формсета
+        if self.request.POST: # Если POST запрос
+            context_data['formset'] = MessagesFormSet(self.request.POST) # Создание формсета с POST данными
+        else:
+            context_data['formset'] = MessagesFormSet() # Создание пустого формсета
+        return context_data # Возврат контекста
+
+
+class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, UpdateView):
+    """Редактирование рассылки"""
+    model = SendMail
+    form_class = SendMailForm
+    template_name = "services/sendmail_update.html"
+
+    def get_success_url(self):
+        return reverse_lazy("services:sendmail_detail", kwargs={"pk": self.object.pk})
+
+    def get_context_data(self, **kwargs): # Переопределение метода get_context_data
+        context_data = super().get_context_data(**kwargs) # Вызов родительского метода get_context_data
+        MessagesFormSet = inlineformset_factory(SendMail, Message, fields='__all__', extra=1) # Создание формсета
+        if self.request.POST: # Если POST запрос
+            context_data['formset'] = MessagesFormSet(self.request.POST) # Создание формсета с POST данными
+        else:
+            context_data['formset'] = MessagesFormSet() # Создание пустого формсета
+        return context_data # Возврат контекста
+
+    def form_valid(self, form): # Переопределение метода form_valid
+        context_data = self.get_context_data() # Получение контекста
+        formset = context_data['formset'] # Получение формсета
+        if formset.is_valid() and form.is_valid(): # Если форма и формсет валидны
+            self.object = form.save() # Сохранение формы
+            formset.instance = self.object # Присвоение формсету объекта
+            formset.save() # Сохранение формсета
+            return super().form_valid(form) # Вызов родительского метода form_valid
+        else:
+            return self.render_to_response(self.get_context_data(form=form)) # Возврат страницы с формой и формсетом
+
+
+class SendMailDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, DeleteView):
+    """Удаление рассылки"""
+    model = SendMail
+    template_name = "services/sendmail_delete.html"
+    # context_object_name = "sendmail"
+    success_url = reverse_lazy("services:sendmail_list")
+
+
+class LogsListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
+    """Список логов"""
+    model = Logs
+    extra_context = {"title": "Список логов"}
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_superuser:
+            context_data["logs"] = Logs.objects.all()
+        else:
+            context_data["logs"] = Logs.objects.filter(sendmail__owner=user)
+
+
+
+
+
+    # class AddMailingView(CreateView):
+#     model = Message
+#     form_class = SendMailForm
+#     template_name = "services/add_mailing.html"
+#     # fields = "__all__"
+#     success_url = reverse_lazy("services:home")

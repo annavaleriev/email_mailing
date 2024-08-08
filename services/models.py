@@ -77,6 +77,7 @@ class Logs(models.Model):
     date_and_time_last_send = models.DateTimeField(verbose_name="Дата и время последней отправки")
     status_send = models.BooleanField(default=False, verbose_name="Статус отправки")
     server_message = models.TextField(max_length=200, verbose_name="Ответ почтового сервера", **NULLABLE)
+
     # send_mail = models.ForeignKey(SendMail, ...)
 
     def __str__(self):
