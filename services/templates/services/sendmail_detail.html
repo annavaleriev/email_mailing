@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "includes/base.html" %}
+{% block content %}
+<form class="row" method="post" enctype="multipart/form-data">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">
+                    Полная информация о рассылке
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Номер</th>
+                            <td>{{ object.pk }}</td>
+                        </tr>
+                        <tr>
+                            <th>Дата начала рассылки</th>
+                            <td>{{ object.date_start_send }}</td>
+                        </tr>
+                        <tr>
+                            <th>Период</th>
+                            <td>{{ object.periodicity }}</td>
+                        </tr>
+                        <tr>
+                            <th>Статус</th>
+                            <td>{{ object.status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Владелец</th>
+                            <td>{{ object.owner }}</td>
+                        </tr>
+                        <tr>
+                            <th>Список клиентов</th>
+                            <td>{% for client in object.clients.all %}</td>
+                            {{ client.first_name }} {{ client.last_name }} {{ client.email }}<br>
+                            {% endfor %}
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer"></div>
+            {% if  user == object.owner %}
+            <a type="button" class="btn btn-sl btn-outline-secondary"
+               href="{% url 'services:sendmail_update' object.pk %}">Редактировать</a>
+            <a type="button" class="btn btn-sl btn-outline-secondary"
+               href="{% url 'services:sendmail_delete' object.pk %}">Удалить</a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+{% endblock %}

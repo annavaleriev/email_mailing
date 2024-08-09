@@ -1,10 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "includes/base.html" %}
+{% block content %}
+<div class="col-12">
+    <form class="row" method="post" enctype="multipart/form-data">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Удалить рассылку{{ object.pk }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn bg-danger">Подтвердить</button>
+                    <a href="{% url 'services:sendmail_list' %}" class="btn btn-warning">Отмена</a>
+                </div>
+                <div class="card-footer"></div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

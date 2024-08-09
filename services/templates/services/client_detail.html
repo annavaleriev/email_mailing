@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="card-footer"></div>
-            {% if perms.service.can_disable_mailing and perms.users.can_block_user or user == object.owner %}
+            {%  user == object.owner %}
             <a type="button" class="btn btn-sl btn-outline-secondary"
                href="{% url 'services:client_update' object.pk %}">Редактировать</a>
             <a type="button" class="btn btn-sl btn-outline-secondary"
