@@ -26,8 +26,8 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(SendMail)
 class SendMailAdmin(admin.ModelAdmin):
-    list_display = ("date_start_send", "periodicity", "status", "message", "get_clients", "is_active")
-    search_fields = ("date_start_send", "periodicity", "status", "message")
+    list_display = ("date_start_send", "periodicity", "status", "get_clients", "is_active")
+    search_fields = ("date_start_send", "periodicity", "status")
     list_filter = ("is_active", "date_start_send", "periodicity", "status", "message")
     readonly_fields = ("status",)  # Поле только для чтения, нельзя менять дату отправки
     ordering = ("is_active", "date_start_send",)
@@ -37,9 +37,9 @@ class SendMailAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {"fields": ("is_active", "date_start_send", "periodicity", "status")}),
         (
-            "Message & Clients",
+            "Clients",
             {
-                "fields": ("message", "clients"),
+                "fields": ("clients", ),
             },
         ),
     )  # Группировка полей в админке, не знаю что это, но вот и посмотрю

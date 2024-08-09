@@ -4,11 +4,14 @@ from services.utils import NULLABLE
 from users.models import User
 
 
-class OwnerMixin:
+class OwnerBaseModel(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Владелец")
 
+    class Meta:
+        abstract = True
 
-class Client(OwnerMixin, models.Model):
+
+class Client(OwnerBaseModel):
     """Модель для хранения данных о клиентах"""
 
     first_name = models.CharField(max_length=50, verbose_name="Имя")
@@ -18,7 +21,7 @@ class Client(OwnerMixin, models.Model):
     comment = models.TextField(verbose_name="Комментарий", **NULLABLE)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name} {self.surname}"
 
     class Meta:
         verbose_name = "Клиент"
@@ -30,6 +33,7 @@ class Message(models.Model):
 
     subject = models.CharField(max_length=150, verbose_name="Тема письма")
     body = models.TextField(verbose_name="Тело письма")
+    send_mail = models.ForeignKey("SendMail", on_delete=models.CASCADE, verbose_name="Рассылка")
 
     def __str__(self):
         return self.subject
@@ -39,7 +43,7 @@ class Message(models.Model):
         verbose_name_plural = "Сообщения"
 
 
-class SendMail(OwnerMixin, models.Model):
+class SendMail(OwnerBaseModel):
     """Модель для хранения данных о письмах"""
 
     PERIODICITY_CHOICES = (
@@ -57,11 +61,10 @@ class SendMail(OwnerMixin, models.Model):
     date_start_send = models.DateTimeField(verbose_name="Дата и время первой отправки рассылки")
     periodicity = models.CharField(max_length=10, choices=PERIODICITY_CHOICES, verbose_name="Периодичность рассылки")
     status = models.CharField(max_length=10, choices=STATUS_MAIL, default="created", verbose_name="Статус рассылки")
-    message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
     clients = models.ManyToManyField(Client, related_name="clients", verbose_name="Клиенты")
 
     def __str__(self):
-        return f"Рассылка: {self.message} - Статус: {self.status}"
+        return f"Рассылка: Статус: {self.status}"
 
     class Meta:
         verbose_name = "Рассылка"

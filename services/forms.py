@@ -21,21 +21,11 @@ class SendMailForm(StyleFormMixin, ModelForm):
 
     class Meta:
         model = SendMail
-        fields = ['date_start_send', 'periodicity', 'status', 'message', 'clients']
+        fields = ['date_start_send', 'periodicity', 'status', 'clients']
         widgets = {  # добавляем виджеты для полей формы
             "date_start_send": DateTimeInput(attrs={"type": "datetime-local"}),
             # добавляем виджет для поля date_start_send
         }
-
-    def __init__(self, *args, **kwargs):  # переопределяем метод __init__
-        self.request = kwargs.pop('request', None)  # извлекаем параметр request из kwargs
-        if self.request:  # если параметр request был передан
-            user = self.request.user  # получаем пользователя из request
-            super().__init__(*args, **kwargs)  # вызываем родительский метод __init__
-            self.fields['clients'].queryset = Client.objects.filter(
-                owner=user)  # фильтруем queryset для поля clients по пользователю
-        else:  # если параметр request не был передан
-            super().__init__(*args, **kwargs)  # вызываем родительский метод __init__
 
 
 class AddClientForm(StyleFormMixin, ModelForm):

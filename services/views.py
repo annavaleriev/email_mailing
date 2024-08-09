@@ -3,7 +3,7 @@ from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from services.forms import SendMailForm, AddClientForm
+from services.forms import SendMailForm, AddClientForm, MessageForm
 from services.models import Client, Message, SendMail, Logs
 
 
@@ -12,10 +12,10 @@ class OwnerQuerysetViewMixin:
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.request.user.is_superuser:
-            return queryset
-        else:
-            return queryset.filter(owner=self.request.user)
+        # if self.request.user.is_superuser:
+        #     return queryset
+        # else:
+        return queryset.filter(owner=self.request.user)
 
 
 class OwnerPermissionMixin:
@@ -31,7 +31,7 @@ class OwnerPermissionMixin:
 
 class HomeView(ListView):
     model = SendMail
-    template_name = "services/home.html"
+    template_name = "services/sendmail_list.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -58,7 +58,7 @@ class ClientDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, DetailView):
 class ClientCreateView(LoginRequiredMixin, CreateView):
     """Добавление клиента"""
     model = Client
-    template_name = "services/add_client.html"
+    template_name = "services/client_update.html"
     # fields = "__all__"
     form_class = AddClientForm
     success_url = reverse_lazy("services:client_list")
@@ -128,14 +128,20 @@ class SendMailCreateView(LoginRequiredMixin, CreateView):
         self.object.save()
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs): # Переопределение метода get_context_data
-        context_data = super().get_context_data(**kwargs) # Вызов родительского метода get_context_data
-        MessagesFormSet = inlineformset_factory(SendMail, Message, fields='__all__', extra=1) # Создание формсета
-        if self.request.POST: # Если POST запрос
-            context_data['formset'] = MessagesFormSet(self.request.POST) # Создание формсета с POST данными
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        MessagesFormSet = inlineformset_factory(self.model, Message, form=MessageForm, extra=1)  # Создание формсета
+        if self.request.POST:
+            formset = MessagesFormSet(self.request.POST, instance=self.object)
         else:
-            context_data['formset'] = MessagesFormSet() # Создание пустого формсета
-        return context_data # Возврат контекста
+            formset = MessagesFormSet(instance=self.object)
+        context_data["formset"] = formset
+        return context_data
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        form.fields['clients'].queryset = Client.objects.filter(owner=self.request.user)
+        return form
 
 
 class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, UpdateView):
