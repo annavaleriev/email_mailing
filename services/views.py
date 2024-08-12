@@ -1,11 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from services.forms import SendMailForm, AddClientForm, MessageForm
+from services.forms import AddClientForm, SendMailForm
 from services.mixins import CreateViewMixin, SendMailFormsetMixin
-from services.models import Client, Message, SendMail, Logs
+from services.models import Client, Logs, SendMail
 
 
 class OwnerQuerysetViewMixin:
@@ -43,6 +42,7 @@ class HomeView(ListView):
 
 class ClientListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
     """Список клиентов"""
+
     model = Client
     template_name = "services/client_list.html"
     extra_context = {"title": "Список клиентов"}  # Добавление дополнительного контекста на страницу
@@ -54,8 +54,9 @@ class ClientDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, DetailView):
     extra_context = {"title": "Информация о клиенте"}
 
 
-class ClientCreateView(LoginRequiredMixin, CreateViewMixin,  CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     """Добавление клиента"""
+
     model = Client
     template_name = "services/client_update.html"
     form_class = AddClientForm
@@ -70,6 +71,7 @@ class ClientCreateView(LoginRequiredMixin, CreateViewMixin,  CreateView):
 
 class ClientUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, UpdateView):
     """Редактирование клиента"""
+
     model = Client
     template_name = "services/client_update.html"
     form_class = AddClientForm
@@ -77,12 +79,14 @@ class ClientUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissi
     success_url = reverse_lazy("services:client_list")
 
     def get_success_url(self):  # Переопределение метода get_success_url
-        return reverse_lazy("services:client_detail",
-                            kwargs={"pk": self.object.pk})  # Возврат ссылки на страницу детальной информации о клиенте
+        return reverse_lazy(
+            "services:client_detail", kwargs={"pk": self.object.pk}
+        )  # Возврат ссылки на страницу детальной информации о клиенте
 
 
 class ClientDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, DeleteView):
     """Удаление клиента"""
+
     model = Client
     template_name = "services/client_delete.html"
     context_object_name = "client"
@@ -91,6 +95,7 @@ class ClientDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissi
 
 class SendMailListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
     """Список рассылок"""
+
     model = SendMail
     template_name = "services/sendmail_list.html"
     form_class = SendMailForm
@@ -99,6 +104,7 @@ class SendMailListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
 
 class SendMailDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, DetailView):
     """Информация о рассылке"""
+
     model = SendMail
     template_name = "services/sendmail_detail.html"
     context_object_name = "sendmail"
@@ -107,6 +113,7 @@ class SendMailDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermis
 
 class SendMailCreateView(LoginRequiredMixin, CreateViewMixin, SendMailFormsetMixin, CreateView):
     """Добавление рассылки"""
+
     model = SendMail
     form_class = SendMailForm
     template_name = "services/sendmail_update.html"
@@ -130,12 +137,15 @@ class SendMailCreateView(LoginRequiredMixin, CreateViewMixin, SendMailFormsetMix
 
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)
-        form.fields['clients'].queryset = Client.objects.filter(owner=self.request.user)
+        form.fields["clients"].queryset = Client.objects.filter(owner=self.request.user)
         return form
 
 
-class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, SendMailFormsetMixin, UpdateView):
+class SendMailUpdateView(
+    LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, SendMailFormsetMixin, UpdateView
+):
     """Редактирование рассылки"""
+
     model = SendMail
     form_class = SendMailForm
     template_name = "services/sendmail_update.html"
@@ -152,20 +162,21 @@ class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermis
     #         context_data['formset'] = MessagesFormSet() # Создание пустого формсета
     #     return context_data # Возврат контекста
 
-    def form_valid(self, form): # Переопределение метода form_valid
-        context_data = self.get_context_data() # Получение контекста
-        formset = context_data['formset'] # Получение формсета
-        if formset.is_valid() and form.is_valid(): # Если форма и формсет валидны
-            self.object = form.save() # Сохранение формы
-            formset.instance = self.object # Присвоение формсету объекта
-            formset.save() # Сохранение формсета
-            return super().form_valid(form) # Вызов родительского метода form_valid
+    def form_valid(self, form):  # Переопределение метода form_valid
+        context_data = self.get_context_data()  # Получение контекста
+        formset = context_data["formset"]  # Получение формсета
+        if formset.is_valid() and form.is_valid():  # Если форма и формсет валидны
+            self.object = form.save()  # Сохранение формы
+            formset.instance = self.object  # Присвоение формсету объекта
+            formset.save()  # Сохранение формсета
+            return super().form_valid(form)  # Вызов родительского метода form_valid
         else:
-            return self.render_to_response(self.get_context_data(form=form)) # Возврат страницы с формой и формсетом
+            return self.render_to_response(self.get_context_data(form=form))  # Возврат страницы с формой и формсетом
 
 
 class SendMailDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermissionMixin, DeleteView):
     """Удаление рассылки"""
+
     model = SendMail
     template_name = "services/sendmail_delete.html"
     success_url = reverse_lazy("services:sendmail_list")
@@ -173,6 +184,7 @@ class SendMailDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, OwnerPermis
 
 class LogsListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
     """Список логов"""
+
     model = Logs
     extra_context = {"title": "Список логов"}
 

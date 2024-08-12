@@ -1,7 +1,7 @@
 from django import forms
-from django.forms import BooleanField, ModelForm, DateTimeInput, CheckboxSelectMultiple
+from django.forms import BooleanField, DateTimeInput, ModelForm
 
-from services.models import SendMail, Client, Message
+from services.models import Client, Message, SendMail
 
 
 class StyleFormMixin:
@@ -21,11 +21,19 @@ class SendMailForm(StyleFormMixin, ModelForm):
 
     class Meta:
         model = SendMail
-        fields = ['date_start_send', 'periodicity', 'status', 'clients']
+        fields = ["date_start_send", "periodicity", "status", "clients"]
         widgets = {  # добавляем виджеты для полей формы
             "date_start_send": DateTimeInput(attrs={"type": "datetime-local"}),
             # добавляем виджет для поля date_start_send
         }
+
+    def __init__(self, *args, **kwargs):
+        super(SendMailForm, self).__init__()
+        self.fields["status"].widget.attrs["readonly"] = True
+
+    def save(self, commit=True):
+        self.instance.status = "created"
+        return super().save(commit=commit)
 
 
 class AddClientForm(StyleFormMixin, ModelForm):

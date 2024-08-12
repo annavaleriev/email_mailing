@@ -1,5 +1,3 @@
-from distutils.log import Log
-
 from django.contrib import admin
 
 from services.models import Client, Logs, Message, SendMail
@@ -30,7 +28,10 @@ class SendMailAdmin(admin.ModelAdmin):
     search_fields = ("date_start_send", "periodicity", "status")
     list_filter = ("is_active", "date_start_send", "periodicity", "status", "message")
     readonly_fields = ("status",)  # Поле только для чтения, нельзя менять дату отправки
-    ordering = ("is_active", "date_start_send",)
+    ordering = (
+        "is_active",
+        "date_start_send",
+    )
     list_per_page = 30
     # list_editable = ("status",)  # Редактирование статуса рассылки, только нафига это надо?
     search_help_text = "Лучше искать рассылку по дате и клиенту"
@@ -39,11 +40,11 @@ class SendMailAdmin(admin.ModelAdmin):
         (
             "Clients",
             {
-                "fields": ("clients", ),
+                "fields": ("clients",),
             },
         ),
     )  # Группировка полей в админке, не знаю что это, но вот и посмотрю
-    filter_horizontal = ("clients", )
+    filter_horizontal = ("clients",)
 
     def get_clients(self, obj):  # Это метод для вывода всех клиентов в рассылке
         return ", ".join([client.email for client in obj.clients.all()])  # Вывод всех клиентов в рассылке
