@@ -1,6 +1,6 @@
 {% extends "includes/base.html" %}
 {% block content %}
-<form class="row" method="post" enctype="multipart/form-data">
+<form class="row d-flex align-items-center justify-content-center" method="post" enctype="multipart/form-data">
     <div class="col-6">
         <div class="card">
             <div class="card-header">
@@ -33,15 +33,17 @@
                         </tr>
                         <tr>
                             <th>Список клиентов</th>
-                            <td>{% for client in object.clients.all %}</td>
-                            {{ client.first_name }} {{ client.last_name }} {{ client.email }}<br>
-                            {% endfor %}
+                            <td>
+                                {% for client in object.clients.all %}
+                                    {{ client.first_name }} {{ client.last_name }} {{ client.email }}<br>
+                                {% endfor %}
+                            </td>
                         </tr>
                     </table>
                 </div>
             </div>
             <div class="card-footer"></div>
-            {% if  user == object.owner %}
+            {% if user.is_authenticated and user == object.owner and perms.services.change_sendmail %}
             <a type="button" class="btn btn-sl btn-outline-secondary"
                href="{% url 'services:sendmail_update' object.pk %}">Редактировать</a>
             <a type="button" class="btn btn-sl btn-outline-secondary"
@@ -51,3 +53,4 @@
     </div>
 </form>
 {% endblock %}
+
