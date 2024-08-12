@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -150,5 +151,5 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 AUTH_USER_MODEL = "users.User"
 
-LOGIN_REDIRECT_URL = "/"  # редирект после успешного входа на главную страницу
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = reverse_lazy("services:home")
+LOGOUT_REDIRECT_URL = reverse_lazy("user:login")

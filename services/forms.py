@@ -18,10 +18,15 @@ class StyleFormMixin:
 
 class SendMailForm(StyleFormMixin, ModelForm):
     """Форма для создания рассылки"""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name == "status":
+                field.disabled = True
 
     class Meta:
         model = SendMail
-        fields = ["date_start_send", "periodicity", "status", "clients"]
+        fields = ["is_active", "date_start_send", "periodicity", "status", "clients"]
         widgets = {  # добавляем виджеты для полей формы
             "date_start_send": DateTimeInput(attrs={"type": "datetime-local"}),
             # добавляем виджет для поля date_start_send
