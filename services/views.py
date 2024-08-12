@@ -119,21 +119,11 @@ class SendMailCreateView(LoginRequiredMixin, CreateViewMixin, SendMailFormsetMix
     template_name = "services/sendmail_update.html"
     success_url = reverse_lazy("services:home")
 
-    # def form_valid(self, form):
-    #     self.object = form.save(commit=False)
-    #     self.object.owner = self.request.user
-    #     self.object.save()
-    #     return super().form_valid(form)
-
-    # def get_context_data(self, **kwargs):
-    #     context_data = super().get_context_data(**kwargs)
-    #     MessagesFormSet = inlineformset_factory(self.model, Message, form=MessageForm, extra=1)  # Создание формсета
-    #     if self.request.POST:
-    #         formset = MessagesFormSet(self.request.POST, instance=self.object)
-    #     else:
-    #         formset = MessagesFormSet(instance=self.object)
-    #     context_data["formset"] = formset
-    #     return context_data
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)

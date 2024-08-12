@@ -27,13 +27,13 @@ class SendMailForm(StyleFormMixin, ModelForm):
             # добавляем виджет для поля date_start_send
         }
 
-    def __init__(self, *args, **kwargs):
-        super(SendMailForm, self).__init__()
-        self.fields["status"].widget.attrs["readonly"] = True
-
-    def save(self, commit=True):
-        self.instance.status = "created"
-        return super().save(commit=commit)
+    # def __init__(self, *args, **kwargs):
+    #     super(SendMailForm, self).__init__()
+    #     self.fields["status"].widget.attrs["readonly"] = True
+    #
+    # def save(self, commit=True):
+    #     self.instance.status = "created"
+    #     return super().save(commit=commit)
 
 
 class AddClientForm(StyleFormMixin, ModelForm):

@@ -1,6 +1,6 @@
 {% block content %}
     <form class="row d-flex align-items-center justify-content-center" method="post" enctype="multipart/form-data">
-        <div class="col-6">
+        <div class="col-8">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -14,6 +14,13 @@
                 <div class="card-body">
                     {% csrf_token %}
                     {{ form.as_p }}
+                    <h4>Сообщения</h4>
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        <div class="formset-row">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
                     <button type="submit" class="btn btn-primary">
                         {% if object %}
                         Сохранить
@@ -27,35 +34,3 @@
         </div>
     </form>
 {% endblock %}
-
-{#{% block content %}#}
-{#    <form class="row d-flex align-items-center justify-content-center" method="post" enctype="multipart/form-data">#}
-{#        <div class="col-md-8 col-lg-6">  <!-- Изменил на более широкий размер колонки -->#}
-{#            <div class="card">#}
-{#                <div class="card-header text-center"> <!-- Центрирование заголовка -->#}
-{#                    <h3 class="card-title">#}
-{#                        {% if object %}#}
-{#                        Редактирование рассылки#}
-{#                        {% else %}#}
-{#                        Добавление рассылки#}
-{#                        {% endif %}#}
-{#                    </h3>#}
-{#                </div>#}
-{#                <div class="card-body">#}
-{#                    {% csrf_token %}#}
-{#                    {{ form.as_p }}#}
-{#                    <div class="text-center"> <!-- Центрирование кнопки -->#}
-{#                        <button type="submit" class="btn btn-primary">#}
-{#                            {% if object %}#}
-{#                            Сохранить#}
-{#                            {% else %}#}
-{#                            Создать#}
-{#                            {% endif %}#}
-{#                        </button>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="card-footer"></div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </form>#}
-{#{% endblock %}#}
