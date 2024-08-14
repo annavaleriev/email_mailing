@@ -59,12 +59,15 @@ class SendMail(OwnerBaseModel):
     )
     is_active = models.BooleanField("Активна", default=True)
     date_start_send = models.DateTimeField(verbose_name="Дата и время первой отправки рассылки")
+    date_end_send = models.DateTimeField(verbose_name="Дата и время завершения рассылки", **NULLABLE)
     periodicity = models.CharField(max_length=10, choices=PERIODICITY_CHOICES, verbose_name="Периодичность рассылки")
     status = models.CharField(max_length=10, choices=STATUS_MAIL, default="created", verbose_name="Статус рассылки")
     clients = models.ManyToManyField(Client, related_name="clients", verbose_name="Клиенты")
 
     def __str__(self):
-        return f"Рассылка: Статус: {self.status}"
+        # return f"Рассылка: Статус: {self.clients} {self.status} {self.date_start_send}"
+        clients = ", ".join([str(client) for client in self.clients.all()])
+        return f"Клиенты: {clients}\nСтатус: {self.status}\nДата и время: {self.date_start_send}"
 
     class Meta:
         verbose_name = "Рассылка"
