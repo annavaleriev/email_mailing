@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from services.forms import AddClientForm, SendMailForm
-from services.mixins import CreateViewMixin, SendMailFormsetMixin, OwnerQuerysetViewMixin
+from services.mixins import CreateViewMixin, OwnerQuerysetViewMixin, SendMailFormsetMixin
 from services.models import Client, Logs, SendMail
 
 
@@ -83,9 +83,7 @@ class SendMailCreateView(LoginRequiredMixin, CreateViewMixin, SendMailFormsetMix
         return form
 
 
-class SendMailUpdateView(
-    LoginRequiredMixin, OwnerQuerysetViewMixin, SendMailFormsetMixin, UpdateView
-):
+class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, SendMailFormsetMixin, UpdateView):
     """Редактирование рассылки"""
 
     def get_form(self, form_class=None):

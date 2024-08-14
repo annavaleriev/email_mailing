@@ -31,12 +31,7 @@ class SendMailFormsetMixin:
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         MessagesFormSet = inlineformset_factory(
-            self.model,
-            Message,
-            form=MessageForm,
-            extra=1,
-            max_num=1,
-            can_delete=False
+            self.model, Message, form=MessageForm, extra=1, max_num=1, can_delete=False
         )  # Создание формсета
         if self.request.POST:
             formset = MessagesFormSet(self.request.POST, instance=self.object)

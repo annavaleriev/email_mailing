@@ -2,8 +2,8 @@ from django.urls import path
 
 from services.apps import ServicesConfig
 from services.views import (ClientCreateView, ClientDeleteView, ClientDetailView, ClientListView, ClientUpdateView,
-                            SendMailCreateView, SendMailDeleteView, SendMailDetailView, SendMailUpdateView,
-                            SendMailListView)
+                            SendMailCreateView, SendMailDeleteView, SendMailDetailView, SendMailListView,
+                            SendMailUpdateView)
 
 app_name = ServicesConfig.name
 
