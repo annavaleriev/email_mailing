@@ -12,6 +12,7 @@ python-dotenv = "^1.0.1"
 psycopg2-binary = "^2.9.9"
 pillow = "^10.4.0"
 django-extensions = "^3.2.3"
+django-apscheduler = "^0.6.2"
 
 
 [tool.poetry.group.linters.dependencies]
