@@ -1,4 +1,5 @@
 {% extends "includes/base.html" %}
+
 {% block content %}
 <form class="row d-flex align-items-center justify-content-center" method="post" enctype="multipart/form-data">
     <div class="col-6">
@@ -17,15 +18,15 @@
                         </tr>
                         <tr>
                             <th>Дата начала рассылки</th>
-                            <td>{{ object.date_start_send }}</td>
+                            <td>{{ object.date_start_send|date:"d.m.Y H:i" }}</td>
                         </tr>
                         <tr>
                             <th>Период</th>
-                            <td>{{ object.periodicity }}</td>
+                            <td>{{ object.get_periodicity_display }}</td>
                         </tr>
                         <tr>
                             <th>Статус</th>
-                            <td>{{ object.status }}</td>
+                            <td>{{ object.get_status_display }}</td>
                         </tr>
                         <tr>
                             <th>Владелец</th>
@@ -35,7 +36,7 @@
                             <th>Список клиентов</th>
                             <td>
                                 {% for client in object.clients.all %}
-                                    {{ client.first_name }} {{ client.last_name }} {{ client.email }}<br>
+                                    {{ client.first_name }} {{ client.last_name }} ({{ client.email }})<br>
                                 {% endfor %}
                             </td>
                         </tr>
@@ -43,11 +44,15 @@
                 </div>
             </div>
             <div class="card-footer"></div>
-            {% if user.is_authenticated and user == object.owner and perms.services.change_sendmail %}
-            <a type="button" class="btn btn-sl btn-outline-secondary"
-               href="{% url 'services:sendmail_update' object.pk %}">Редактировать</a>
-            <a type="button" class="btn btn-sl btn-outline-secondary"
-               href="{% url 'services:sendmail_delete' object.pk %}">Удалить</a>
+            {% if user.is_authenticated %}
+                {% if perms.services.disable_sendmail or user == object.owner or user.is_superuser %}
+                    <a type="button" class="btn btn-sl btn-outline-secondary"
+                       href="{% url 'services:sendmail_update' object.pk %}">Редактировать</a>
+                {% endif %}
+                {% if user.is_superuser or user == object.owner %}
+                    <a type="button" class="btn btn-sl btn-outline-secondary"
+                       href="{% url 'services:sendmail_delete' object.pk %}">Удалить</a>
+                {% endif %}
             {% endif %}
         </div>
     </div>

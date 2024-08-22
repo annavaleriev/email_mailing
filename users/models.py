@@ -2,7 +2,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from services.utils import NULLABLE
+NULLABLE = {"blank": True, "null": True}
 
 
 class UserManager(BaseUserManager):
@@ -51,7 +51,15 @@ class User(AbstractUser):
     objects = UserManager()  # Объект для работы с пользователями
 
     def __str__(self):
-        return f"{self.email} {self.phone}"  # Возвращаем строку
+        return f"{self.email} {self.phone or ''}"  # Возвращаем строку
+
+    @property
+    def can_block_user(self):
+        return self.has_perm("users.block_user")
+
+    @property
+    def can_disable_sendmail(self):
+        return self.has_perm("services.disable_sendmail")
 
     class Meta:
         """Мета-класс для модели пользователя"""

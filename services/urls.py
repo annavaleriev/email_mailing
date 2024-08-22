@@ -3,7 +3,7 @@ from django.urls import path
 from services.apps import ServicesConfig
 from services.views import (ClientCreateView, ClientDeleteView, ClientDetailView, ClientListView, ClientUpdateView,
                             SendMailCreateView, SendMailDeleteView, SendMailDetailView, SendMailListView,
-                            SendMailUpdateView)
+                            SendMailUpdateView, block_client, unblock_client, LogsListView)
 
 app_name = ServicesConfig.name
 
@@ -18,4 +18,7 @@ urlpatterns = [
     path("mailing/add/", SendMailCreateView.as_view(), name="add_mailing"),
     path("mailing/<int:pk>/update/", SendMailUpdateView.as_view(), name="sendmail_update"),
     path("mailing/<int:pk>/delete/", SendMailDeleteView.as_view(), name="sendmail_delete"),
+    path('block-client/<int:user_id>/', block_client, name='block_client'),
+    path('unblock-client/<int:user_id>/', unblock_client, name='unblock_client'),
+    path('my-mailing-statistics/', LogsListView.as_view(), name='my_mailing_statistics'),
 ]

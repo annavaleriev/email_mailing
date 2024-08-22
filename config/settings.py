@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "services",
     "users",
     "django_apscheduler",
+    "blog"
 ]
 
 MIDDLEWARE = [
@@ -90,6 +91,8 @@ DATABASES = {
         "NAME": "services",
         "USER": "postgres",
         "PASSWORD": os.getenv("DATABASE_PASSWORD"),
+        "PORT": os.getenv("DATABASE_PORT"),
+        "HOST": os.getenv("DATABASE_HOST"),
     }
 }
 
@@ -118,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "ru-ru"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 

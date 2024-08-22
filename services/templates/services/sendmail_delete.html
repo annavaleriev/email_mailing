@@ -13,7 +13,8 @@
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button type="submit" class="btn bg-danger">Подтвердить</button>
-                    <a href="{% url 'services:sendmail_list' %}" class="btn btn-warning">Отмена</a>
+                    <a href="{% url 'services:home' %}" class="btn btn-warning">Отмена</a>
+{#                    <a href="{% url 'home' %}" class="btn btn-warning">Отмена</a>#}
                 </div>
                 <div class="card-footer"></div>
             </div>

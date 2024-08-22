@@ -1,7 +1,7 @@
 from django.forms import inlineformset_factory
 
 from services.forms import MessageForm, SendMailForm
-from services.models import Message, SendMail
+from services.models import Message, SendMail, Client
 
 
 class CreateViewMixin:
@@ -12,15 +12,31 @@ class CreateViewMixin:
         return super().form_valid(form)
 
 
+class StatisticMixin:
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        total_sendmail = SendMail.objects.count()
+        total_sendmail_is_active = SendMail.objects.filter(is_active=True).count()
+        total_clients = Client.objects.count()
+
+        context = {
+            "total_sendmail": total_sendmail,
+            "total_sendmail_is_active": total_sendmail_is_active,
+            "total_clients": total_clients,
+        }
+        context_data.update(context)
+        return context_data
+
+
 class OwnerQuerysetViewMixin:
     """Миксин для фильтрации queryset по владельцу"""
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        # if self.request.user.is_superuser:
-        #     return queryset
-        # else:
-        return queryset.filter(owner=self.request.user)
+        if self.request.user.is_superuser or self.request.user.can_disable_sendmail:
+            return queryset
+        else:
+            return queryset.filter(owner=self.request.user)
 
 
 class SendMailFormsetMixin:
