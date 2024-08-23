@@ -1,0 +1,39 @@
+{% extends 'includes/base.html' %}
+
+{% load my_tags %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col text-end">
+                <a class="btn btn-primary" href="{% url 'blog:create' %}">Добавить статью</a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for article in object_list %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img class="card-img-top" src="{% media article.image %}" alt="{{ article.title }}">
+                        <div class="card-body">
+                            <h5>{{ article.title }}</h5>
+                            <p class="card-text">{{ article.body | truncatechars:100 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                       href="{% url 'blog:view' pk=article.id %}">View</a>
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                       href="{% url 'blog:edit' pk=article.id %}">Edit</a>
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                       href="{% url 'blog:delete' pk=article.id %}">Delete</a>
+                                    <div>
+                                        <small class="text-muted" style="margin-left:auto;">Просмотры: {{ article.views }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
