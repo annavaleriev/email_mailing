@@ -5,6 +5,8 @@ from services.models import Client, Message, SendMail
 
 
 class CreateViewMixin:
+    """Миксин для создания объекта"""
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
@@ -13,6 +15,8 @@ class CreateViewMixin:
 
 
 class StatisticMixin:
+    """Миксин для вывода статистики"""
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         total_sendmail = SendMail.objects.count()
@@ -28,8 +32,8 @@ class StatisticMixin:
         return context_data
 
 
-class OwnerQuerysetViewMixin:
-    """Миксин для фильтрации queryset по владельцу"""
+class SendmailOwnerQuerysetViewMixin:
+    """Миксин для фильтрации queryset по владельцу рассылки"""
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -39,7 +43,20 @@ class OwnerQuerysetViewMixin:
             return queryset.filter(owner=self.request.user)
 
 
+class ClientOwnerQuerysetViewMixin:
+    """Миксин для фильтрации queryset по владельцу клиента"""
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
+        else:
+            return queryset.filter(owner=self.request.user)
+
+
 class SendMailFormsetMixin:
+    """Миксин для работы с формсетом"""
+
     model = SendMail
     form_class = SendMailForm
     template_name = "services/sendmail_update.html"

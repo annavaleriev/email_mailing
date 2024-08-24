@@ -10,7 +10,8 @@ from pytz import timezone
 
 from services.forms import AddClientForm, SendMailForm
 from services.mailing_job import my_job
-from services.mixins import CreateViewMixin, OwnerQuerysetViewMixin, SendMailFormsetMixin, StatisticMixin
+from services.mixins import CreateViewMixin, SendMailFormsetMixin, StatisticMixin, ClientOwnerQuerysetViewMixin, \
+    SendmailOwnerQuerysetViewMixin
 from services.models import Client, Logs, SendMail
 
 DATABASE = settings.DATABASES["default"]  # Получение настроек базы данных
@@ -27,7 +28,7 @@ scheduler = BackgroundScheduler(jobstores=job_stores, timezone=timezone(settings
 scheduler.start()  # Запуск планировщика
 
 
-class ClientListView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, ListView):
+class ClientListView(LoginRequiredMixin, ClientOwnerQuerysetViewMixin, StatisticMixin, ListView):
     """Список клиентов"""
 
     model = Client
@@ -35,7 +36,7 @@ class ClientListView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin,
     extra_context = {"title": "Список клиентов"}  # Добавление дополнительного контекста на страницу
 
 
-class ClientDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, DetailView):
+class ClientDetailView(LoginRequiredMixin, ClientOwnerQuerysetViewMixin, StatisticMixin, DetailView):
     model = Client
     template_name = "services/client_detail.html"
     extra_context = {"title": "Информация о клиенте"}
@@ -50,7 +51,7 @@ class ClientCreateView(LoginRequiredMixin, CreateViewMixin, StatisticMixin, Crea
     success_url = reverse_lazy("services:client_list")
 
 
-class ClientUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, UpdateView):
+class ClientUpdateView(LoginRequiredMixin, ClientOwnerQuerysetViewMixin, StatisticMixin, UpdateView):
     """Редактирование клиента"""
 
     model = Client
@@ -64,7 +65,7 @@ class ClientUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixi
         )  # Возврат ссылки на страницу детальной информации о клиенте
 
 
-class ClientDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, DeleteView):
+class ClientDeleteView(LoginRequiredMixin, ClientOwnerQuerysetViewMixin, StatisticMixin, DeleteView):
     """Удаление клиента"""
 
     model = Client
@@ -73,7 +74,7 @@ class ClientDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixi
     success_url = reverse_lazy("services:client_list")
 
 
-class SendMailListView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, ListView):
+class SendMailListView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, StatisticMixin, ListView):
     """Список рассылок"""
 
     model = SendMail
@@ -82,7 +83,7 @@ class SendMailListView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixi
     extra_context = {"title": "Список рассылок"}
 
 
-class SendMailDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, DetailView):
+class SendMailDetailView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, StatisticMixin, DetailView):
     """Информация о рассылке"""
 
     model = SendMail
@@ -118,7 +119,7 @@ class SendMailCreateView(LoginRequiredMixin, CreateViewMixin, SendMailFormsetMix
         return form  # Возврат формы
 
 
-class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, SendMailFormsetMixin, StatisticMixin, UpdateView):
+class SendMailUpdateView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, SendMailFormsetMixin, StatisticMixin, UpdateView):
     """Редактирование рассылки"""
 
     def get_context_data(self, **kwargs):
@@ -165,7 +166,7 @@ class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, SendMailFor
         return send_mail
 
 
-class SendMailDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, DeleteView):
+class SendMailDeleteView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, StatisticMixin, DeleteView):
     """Удаление рассылки"""
 
     model = SendMail
@@ -184,7 +185,7 @@ class SendMailDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMi
         return super().post(request, *args, **kwargs)  # Вызов родительского метода post
 
 
-class LogsListView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, ListView):
+class LogsListView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, StatisticMixin, ListView):
     """Список логов"""
 
     model = Logs
