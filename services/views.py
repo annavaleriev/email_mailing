@@ -4,6 +4,7 @@ from apscheduler.triggers.cron import CronTrigger
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import HiddenInput
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from pytz import timezone
@@ -19,7 +20,7 @@ DATABASE = settings.DATABASES["default"]  # Получение настроек 
 job_stores = {  # Создание хранилища задач
     "default": SQLAlchemyJobStore(  # Использование SQLAlchemyJobStore
         url=f'postgresql://{DATABASE["USER"]}:{DATABASE["PASSWORD"]}'  # Подключение к базе данных
-        f'@{DATABASE["HOST"]}:{DATABASE["PORT"]}/{DATABASE["NAME"]}'  # Подключение к базе данных
+            f'@{DATABASE["HOST"]}:{DATABASE["PORT"]}/{DATABASE["NAME"]}'  # Подключение к базе данных
     )
 }
 
@@ -82,6 +83,19 @@ class SendMailListView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, Stati
     form_class = SendMailForm
     extra_context = {"title": "Список рассылок"}
 
+    # def sendmail_list_view(request):
+    #     # Проверяем, принадлежит ли текущий пользователь к группе "Manager"
+    #     is_manager = request.user.groups.filter(name='Manager').exists()
+    #
+    #     # Получаем список рассылок (например, все)
+    #     object_list = SendMail.objects.all()
+    #
+    #     # Передаем переменную is_manager в шаблон
+    #     return render(request, 'services/sendmail_list.html', {
+    #         'object_list': object_list,
+    #         'is_manager': is_manager
+    #     })
+
 
 class SendMailDetailView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, StatisticMixin, DetailView):
     """Информация о рассылке"""
@@ -119,7 +133,8 @@ class SendMailCreateView(LoginRequiredMixin, CreateViewMixin, SendMailFormsetMix
         return form  # Возврат формы
 
 
-class SendMailUpdateView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, SendMailFormsetMixin, StatisticMixin, UpdateView):
+class SendMailUpdateView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, SendMailFormsetMixin, StatisticMixin,
+                         UpdateView):
     """Редактирование рассылки"""
 
     def get_context_data(self, **kwargs):
@@ -128,7 +143,7 @@ class SendMailUpdateView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, Sen
         formset = context["formset"].form
 
         if not (
-            self.request.user.is_superuser or self.request.user.can_disable_sendmail
+                self.request.user.is_superuser or self.request.user.can_disable_sendmail
         ):  # прописать условия для супер и менеджера
             form.base_fields["is_active"].widget = HiddenInput()
 
