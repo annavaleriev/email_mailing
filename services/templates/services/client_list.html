@@ -1,115 +1,3 @@
-
-{#{% extends "includes/base.html" %}#}
-{##}
-{#{% block content %}#}
-{##}
-{#    <!-- Блок для отображения сообщений -->#}
-{#    {% if messages %}#}
-{#        <div class="alert alert-success">#}
-{#            {% for message in messages %}#}
-{#                <p>{{ message }}</p>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#    {% endif %}#}
-{##}
-{#    <div class="album py-5 bg-body-tertiary">#}
-{#        <div class="container">#}
-{#            <div class="row mb-5">#}
-{#                <div class="col text-end">#}
-{#                    <a href="{% url 'services:add_client' %}" class="btn btn-primary mb-3">Добавить клиента</a>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">#}
-{#                {% for object in object_list %}#}
-{#                    <div class="col">#}
-{#                        <div class="card shadow-sm">#}
-{#                            <div class="card-body">#}
-{#                                <p class="card-text">{{ object }}</p>#}
-{#                                <div class="d-flex justify-content-between">#}
-{#                                    <div class="btn-group">#}
-{#                                        <a type="button" class="btn btn-sm btn-outline-secondary"#}
-{#                                           href="{% url 'services:client_detail' object.pk %}">Инфо о клиенте</a>#}
-{#                                    </div>#}
-{#                                    {% if object.is_active %}#}
-{#                                        <a type="button" class="btn btn-sm btn-outline-danger"#}
-{#                                           href="{% url 'services:block_client' object.pk %}">#}
-{#                                            Заблокировать#}
-{#                                        </a>#}
-{#                                    {% else %}#}
-{#                                        <a type="button" class="btn btn-sm btn-outline-success ms-auto"#}
-{#                                           href="{% url 'services:unblock_client' object.pk %}">#}
-{#                                            Разблокировать#}
-{#                                        </a>#}
-{#                                    {% endif %}#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                {% empty %}#}
-{#                    <p>Нет клиентов для отображения.</p>#}
-{#                {% endfor %}#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#{% endblock %}#}
-
-{#{% extends "includes/base.html" %}#}
-{##}
-{#{% block content %}#}
-{##}
-{#    <!-- Блок для отображения сообщений -->#}
-{#    {% if messages %}#}
-{#        <div class="alert alert-success">#}
-{#            {% for message in messages %}#}
-{#                <p>{{ message }}</p>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#    {% endif %}#}
-{##}
-{#    <div class="album py-5 bg-body-tertiary">#}
-{#        <div class="container">#}
-{#            <div class="row mb-5">#}
-{#                <div class="col text-end">#}
-{#                    <a href="{% url 'services:add_client' %}" class="btn btn-primary mb-3">Добавить клиента</a>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">#}
-{#                {% for object in object_list %}#}
-{#                    <div class="col">#}
-{#                        <div class="card shadow-sm">#}
-{#                            <div class="card-body">#}
-{#                                <!-- Имя клиента выделено жирным черным -->#}
-{#                                <p class="card-text"><strong>{{ object }}</strong></p>#}
-{#                                <div class="d-flex justify-content-between">#}
-{#                                    <div class="btn-group">#}
-{#                                        <a type="button" class="btn btn-sm btn-outline-secondary"#}
-{#                                           href="{% url 'services:client_detail' object.pk %}">Инфо о клиенте</a>#}
-{#                                    </div>#}
-{#                                    {% if object.is_active %}#}
-{#                                        <!-- Кнопка "Заблокировать" зеленого цвета -->#}
-{#                                        <a type="button" class="btn btn-sm btn-outline-success"#}
-{#                                           href="{% url 'services:block_client' object.pk %}">#}
-{#                                            Заблокировать#}
-{#                                        </a>#}
-{#                                    {% else %}#}
-{#                                        <!-- Кнопка "Разблокировать" зеленого цвета -->#}
-{#                                        <a type="button" class="btn btn-sm btn-outline-success ms-auto"#}
-{#                                           href="{% url 'services:unblock_client' object.pk %}">#}
-{#                                            Разблокировать#}
-{#                                        </a>#}
-{#                                    {% endif %}#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                {% empty %}#}
-{#                    <p>Нет клиентов для отображения.</p>#}
-{#                {% endfor %}#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#{% endblock %}#}
-
 {% extends "includes/base.html" %}
 
 {% block content %}
@@ -142,21 +30,6 @@
                                         <a type="button" class="btn btn-sm btn-outline-secondary"
                                            href="{% url 'services:client_detail' object.pk %}">Инфо о клиенте</a>
                                     </div>
-                                    <div class="ms-2">
-                                        {% if object.is_active %}
-                                            <!-- Кнопка "Заблокировать" с зеленым фоном и белым текстом -->
-                                            <a type="button" class="btn btn-sm btn-success"
-                                               href="{% url 'services:block_client' object.pk %}">
-                                                Заблокировать
-                                            </a>
-                                        {% else %}
-                                            <!-- Кнопка "Разблокировать" с зеленым фоном и белым текстом -->
-                                            <a type="button" class="btn btn-sm btn-success"
-                                               href="{% url 'services:unblock_client' object.pk %}">
-                                                Разблокировать
-                                            </a>
-                                        {% endif %}
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -168,4 +41,3 @@
         </div>
     </div>
 {% endblock %}
-

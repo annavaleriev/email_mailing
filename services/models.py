@@ -69,10 +69,12 @@ class SendMail(OwnerBaseModel):
         clients = ", ".join([str(client) for client in self.clients.all()])
         periodicity_display = dict(self.PERIODICITY_CHOICES)[self.periodicity]
         # periodicity_display = self.get_periodicity_display()
-        return (f"Клиенты: {clients}\n"
-                f"Статус: {self.get_status_display()}\n"
-                f"Дата и время: {self.date_start_send}\n"
-                f"Периодичность: {periodicity_display}")
+        return (
+            f"Клиенты: {clients}\n"
+            f"Статус: {self.get_status_display()}\n"
+            f"Дата и время: {self.date_start_send}\n"
+            f"Периодичность: {periodicity_display}"
+        )
 
     class Meta:
         verbose_name = "Рассылка"

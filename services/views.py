@@ -2,11 +2,8 @@ from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import HiddenInput
-from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from pytz import timezone
@@ -21,7 +18,7 @@ DATABASE = settings.DATABASES["default"]  # Получение настроек 
 job_stores = {  # Создание хранилища задач
     "default": SQLAlchemyJobStore(  # Использование SQLAlchemyJobStore
         url=f'postgresql://{DATABASE["USER"]}:{DATABASE["PASSWORD"]}'  # Подключение к базе данных
-            f'@{DATABASE["HOST"]}:{DATABASE["PORT"]}/{DATABASE["NAME"]}'  # Подключение к базе данных
+        f'@{DATABASE["HOST"]}:{DATABASE["PORT"]}/{DATABASE["NAME"]}'  # Подключение к базе данных
     )
 }
 
@@ -30,7 +27,7 @@ scheduler = BackgroundScheduler(jobstores=job_stores, timezone=timezone(settings
 scheduler.start()  # Запуск планировщика
 
 
-class ClientListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
+class ClientListView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, ListView):
     """Список клиентов"""
 
     model = Client
@@ -38,13 +35,13 @@ class ClientListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
     extra_context = {"title": "Список клиентов"}  # Добавление дополнительного контекста на страницу
 
 
-class ClientDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, DetailView):
+class ClientDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, DetailView):
     model = Client
     template_name = "services/client_detail.html"
     extra_context = {"title": "Информация о клиенте"}
 
 
-class ClientCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateViewMixin, StatisticMixin, CreateView):
     """Добавление клиента"""
 
     model = Client
@@ -53,7 +50,7 @@ class ClientCreateView(LoginRequiredMixin, CreateViewMixin, CreateView):
     success_url = reverse_lazy("services:client_list")
 
 
-class ClientUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, UpdateView):
+class ClientUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, UpdateView):
     """Редактирование клиента"""
 
     model = Client
@@ -67,7 +64,7 @@ class ClientUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, UpdateView):
         )  # Возврат ссылки на страницу детальной информации о клиенте
 
 
-class ClientDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, DeleteView):
+class ClientDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, DeleteView):
     """Удаление клиента"""
 
     model = Client
@@ -85,7 +82,7 @@ class SendMailListView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixi
     extra_context = {"title": "Список рассылок"}
 
 
-class SendMailDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, DetailView):
+class SendMailDetailView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, DetailView):
     """Информация о рассылке"""
 
     model = SendMail
@@ -121,7 +118,7 @@ class SendMailCreateView(LoginRequiredMixin, CreateViewMixin, SendMailFormsetMix
         return form  # Возврат формы
 
 
-class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, SendMailFormsetMixin, UpdateView):
+class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, SendMailFormsetMixin, StatisticMixin, UpdateView):
     """Редактирование рассылки"""
 
     def get_context_data(self, **kwargs):
@@ -129,7 +126,9 @@ class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, SendMailFor
         form = context["form"]
         formset = context["formset"].form
 
-        if not (self.request.user.is_superuser or self.request.user.can_disable_sendmail):  # прописать условия для супер и менеджера
+        if not (
+            self.request.user.is_superuser or self.request.user.can_disable_sendmail
+        ):  # прописать условия для супер и менеджера
             form.base_fields["is_active"].widget = HiddenInput()
 
         if self.request.user.can_disable_sendmail:
@@ -166,7 +165,7 @@ class SendMailUpdateView(LoginRequiredMixin, OwnerQuerysetViewMixin, SendMailFor
         return send_mail
 
 
-class SendMailDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, DeleteView):
+class SendMailDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, DeleteView):
     """Удаление рассылки"""
 
     model = SendMail
@@ -185,43 +184,12 @@ class SendMailDeleteView(LoginRequiredMixin, OwnerQuerysetViewMixin, DeleteView)
         return super().post(request, *args, **kwargs)  # Вызов родительского метода post
 
 
-class LogsListView(LoginRequiredMixin, OwnerQuerysetViewMixin, ListView):
+class LogsListView(LoginRequiredMixin, OwnerQuerysetViewMixin, StatisticMixin, ListView):
     """Список логов"""
 
     model = Logs
     template_name = "services/logs_list.html"
     extra_context = {"title": "Статистика рассылок"}
 
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context_data = super().get_context_data(**kwargs)
-    #     user = self.request.user
-    #     if user.is_superuser:
-    #         context_data["logs"] = Logs.objects.all()
-    #     else:
-    #         context_data["logs"] = Logs.objects.filter(sendmail__owner=user)
-
     def get_queryset(self):
         return Logs.objects.filter(send_mail__owner=self.request.user)
-
-
-@permission_required('users.block_user')
-def block_client(request, user_id):
-    """Блокировка клиента"""
-    client = get_object_or_404(Client, id=user_id)
-    client.is_active = False  # Деактивируем клиента
-    client.save()
-    request.session['last_client_id'] = client.id
-    messages.success(request, f"Клиент {client.first_name} {client.last_name} {client.email} заблокирован")
-    return redirect("services:client_list")
-
-
-@permission_required('users.block_user')
-def unblock_client(request, user_id):
-    """Разблокировка клиента"""
-    client = get_object_or_404(Client, id=user_id)
-    client.is_active = True  # Активируем клиента
-    client.save()
-    request.session['last_client_id'] = client.id
-    messages.success(request, f"Клиент {client.first_name} {client.last_name} {client.email} разблокирован")
-    return redirect("services:client_list")
-

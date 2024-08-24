@@ -20,7 +20,6 @@
                                     <strong>Клиенты:</strong> {{ object.clients.all|join:", " }}<br>
                                     <strong>Статус:</strong> {{ object.get_status_display }}<br>
                                     <strong>Запланированное время:</strong> {{ object.date_start_send|date:"d M Y H:i" }}<br>
-                                    <strong>Периодичность:</strong> {{ object.periodicity }}<br>
                                 </p>
                                 <div class="btn-group">
                                     <a type="button" class="btn btn-sm btn-outline-secondary"

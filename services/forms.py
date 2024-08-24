@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import BooleanField, ModelForm, DateTimeInput
+from django.forms import BooleanField, DateTimeInput, ModelForm
 
 from services.models import Client, Message, SendMail
 
@@ -39,8 +39,8 @@ class SendMailForm(StyleFormMixin, ModelForm):
         model = SendMail
         fields = ["is_active", "date_start_send", "date_end_send", "periodicity", "status", "clients"]
         widgets = {  # добавляем виджеты для полей формы
-            "date_start_send": DateTimeInput(format=('%Y-%m-%dT%H:%M'), attrs={"type": "datetime-local"}),
-            "date_end_send": DateTimeInput(format=('%Y-%m-%dT%H:%M'), attrs={"type": "datetime-local"}),
+            "date_start_send": DateTimeInput(format=("%Y-%m-%dT%H:%M"), attrs={"type": "datetime-local"}),
+            "date_end_send": DateTimeInput(format=("%Y-%m-%dT%H:%M"), attrs={"type": "datetime-local"}),
             # добавляем виджет для поля date_start_send
         }
 

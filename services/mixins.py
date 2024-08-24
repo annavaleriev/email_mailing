@@ -1,7 +1,7 @@
 from django.forms import inlineformset_factory
 
 from services.forms import MessageForm, SendMailForm
-from services.models import Message, SendMail, Client
+from services.models import Client, Message, SendMail
 
 
 class CreateViewMixin:
