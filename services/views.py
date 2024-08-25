@@ -1,4 +1,3 @@
-from apscheduler.triggers.cron import CronTrigger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import HiddenInput
 from django.urls import reverse_lazy
@@ -65,19 +64,6 @@ class SendMailListView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, Stati
     template_name = "services/sendmail_list.html"
     form_class = SendMailForm
     extra_context = {"title": "Список рассылок"}
-
-    # def sendmail_list_view(request):
-    #     # Проверяем, принадлежит ли текущий пользователь к группе "Manager"
-    #     is_manager = request.user.groups.filter(name='Manager').exists()
-    #
-    #     # Получаем список рассылок (например, все)
-    #     object_list = SendMail.objects.all()
-    #
-    #     # Передаем переменную is_manager в шаблон
-    #     return render(request, 'services/sendmail_list.html', {
-    #         'object_list': object_list,
-    #         'is_manager': is_manager
-    #     })
 
 
 class SendMailDetailView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, StatisticMixin, DetailView):

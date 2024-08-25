@@ -73,29 +73,3 @@ def email_verification(request, token):
     user.groups.add(user_group)
     user.save()
     return redirect(reverse("user:login"))
-
-
-# @permission_required('users.block_user')
-# def block_user(request, user_id):
-#     """Блокировка пользователя"""
-#     user = get_object_or_404(User, id=user_id)
-#     if not user.is_staff and not user.is_superuser:
-#         user.is_active = False
-#         user.save()
-#         messages.success(request, f"Пользователь {user.first_name} {user.last_name} {user.email} заблокирован")
-#     else:
-#         messages.error(request, "Нельзя заблокировать сотрудника или админа")
-#     return redirect("services:client_list")
-#
-#
-# @permission_required('users.block_user') # Декоратор для проверки прав доступа
-# def unblock_user(request, user_id):
-#     """Разблокировка пользователя"""
-#     user = get_object_or_404(User, id=user_id)
-#     if not user.is_staff and not user.is_superuser:
-#         user.is_active = True
-#         user.save()
-#         messages.success(request, f"Пользователь {user.first_name} {user.last_name} {user.email} разблокирован")
-#     else:
-#         messages.error(request, "Нельзя разблокировать пользователя")
-#     return redirect("services:client_list")
