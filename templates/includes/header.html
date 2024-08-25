@@ -5,7 +5,7 @@
             <form method="post" action="{% url 'user:logout' %}">
                 {% csrf_token %}
                 <a class="p-2 btn btn-outline-primary" href="{% url 'services:home' %}">Рассылки</a>
-                {% if user.is_superuser or perms.users.can_view_client %}
+                {% if user.is_superuser or perms.services.view_client %}
                     <a class="p-2 btn btn-outline-primary" href="{% url 'services:client_list' %}">Клиенты</a>
                 {% endif %}
                 <a class="p-2 btn btn-outline-primary" href="{% url 'blog:list' %}">Блог</a>

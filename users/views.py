@@ -1,7 +1,8 @@
 import secrets
 
 from django.contrib import messages
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -41,8 +42,35 @@ class UserCreateView(CreateView):
 
 def email_verification(request, token):
     """Подтверждение почты"""
+    user_permissions = (
+        {
+            "app_label": 'services',
+            "model": 'client',
+            "codename": 'view_client',
+        },
+        {
+            "app_label": 'services',
+            "model": 'sendmail',
+            "codename": 'add_sendmail',
+        },
+    )
+
     user = get_object_or_404(User, token=token)
     user.is_active = True
+    user_group, created = Group.objects.get_or_create(name="Пользователи")
+    if created:
+        permissions = [
+            Permission.objects.filter(
+                content_type=ContentType.objects.get(
+                    app_label=perm['app_label'],
+                    model=perm['model']
+                ),
+                codename=perm['codename']
+            ).first()
+            for perm in user_permissions
+        ]
+        user_group.permissions.set(permissions)
+    user.groups.add(user_group)
     user.save()
     return redirect(reverse("user:login"))
 

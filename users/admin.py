@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.forms import CheckboxInput
+
 from users.models import User
 
 
@@ -19,3 +21,12 @@ class UserAdmin(admin.ModelAdmin):
         self.message_user(request, "Пользователь заблокирован")  # Выводим сообщение
 
     block_user.short_description = "Заблокировать пользователя"  # Название действия в самой админке
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        is_active_field = form.base_fields.get("is_active")
+        if request.user.can_block_user and is_active_field:
+            is_active_field.widget = CheckboxInput()
+        if request.user.can_block_user and "is_active" in form._meta.exclude:
+            form._meta.exclude.remove("is_active")
+        return form

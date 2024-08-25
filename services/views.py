@@ -1,32 +1,15 @@
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import HiddenInput
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
-from pytz import timezone
 
+from services import scheduler
 from services.forms import AddClientForm, SendMailForm
 from services.mailing_job import my_job
 from services.mixins import CreateViewMixin, SendMailFormsetMixin, StatisticMixin, ClientOwnerQuerysetViewMixin, \
     SendmailOwnerQuerysetViewMixin
 from services.models import Client, Logs, SendMail
-
-DATABASE = settings.DATABASES["default"]  # Получение настроек базы данных
-
-job_stores = {  # Создание хранилища задач
-    "default": SQLAlchemyJobStore(  # Использование SQLAlchemyJobStore
-        url=f'postgresql://{DATABASE["USER"]}:{DATABASE["PASSWORD"]}'  # Подключение к базе данных
-            f'@{DATABASE["HOST"]}:{DATABASE["PORT"]}/{DATABASE["NAME"]}'  # Подключение к базе данных
-    )
-}
-
-scheduler = BackgroundScheduler(jobstores=job_stores, timezone=timezone(settings.TIME_ZONE))
-# Создание планировщика
-scheduler.start()  # Запуск планировщика
 
 
 class ClientListView(LoginRequiredMixin, ClientOwnerQuerysetViewMixin, StatisticMixin, ListView):
@@ -113,11 +96,7 @@ class SendMailCreateView(LoginRequiredMixin, CreateViewMixin, SendMailFormsetMix
 
     def post(self, request, *args, **kwargs):  # Переопределение метода post
         send_mail = super().post(request, *args, **kwargs)  # Вызов родительского метода post
-        expr = f"{self.object.date_start_send.minute} {self.object.date_start_send.hour} {self.object.periodicity}"
-        # Формирование строки для периодичности
-        cron_trigger = CronTrigger.from_crontab(expr=expr)  # Создание триггера
-        cron_trigger.start_date = self.object.date_start_send  # Установка времени начала
-        cron_trigger.end_date = self.object.date_end_send  # Установка времени окончания
+        cron_trigger = self.create_cron_trigger()
 
         scheduler.add_job(  # Добавление задачи
             my_job,  # Функция, которую нужно выполнить
@@ -159,23 +138,9 @@ class SendMailUpdateView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, Sen
     def get_success_url(self):
         return reverse_lazy("services:sendmail_detail", kwargs={"pk": self.object.pk})
 
-    def form_valid(self, form):  # Переопределение метода form_valid
-        context_data = self.get_context_data()  # Получение контекста
-        formset = context_data["formset"]  # Получение формсета
-        if formset.is_valid() and form.is_valid():  # Если форма и формсет валидны
-            form.save()  # Сохранение формы
-            formset.save()  # Сохранение формсета
-            return super().form_valid(form)  # Вызов родительского метода form_valid
-        else:
-            return self.render_to_response(self.get_context_data(form=form))  # Возврат страницы с формой и формсетом
-
     def post(self, request, *args, **kwargs):
         send_mail = super().post(request, *args, **kwargs)
-        expr = f"{self.object.date_start_send.minute} {self.object.date_start_send.hour} {self.object.periodicity}"
-
-        cron_trigger = CronTrigger.from_crontab(expr=expr)
-        cron_trigger.start_date = self.object.date_start_send
-        cron_trigger.end_date = self.object.date_end_send
+        cron_trigger = self.create_cron_trigger()
 
         scheduler.reschedule_job(str(self.object.pk), trigger=cron_trigger)
         return send_mail

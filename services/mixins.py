@@ -1,3 +1,4 @@
+from apscheduler.triggers.cron import CronTrigger
 from django.forms import inlineformset_factory
 
 from services.forms import MessageForm, SendMailForm
@@ -72,3 +73,22 @@ class SendMailFormsetMixin:
             formset = MessagesFormSet(instance=self.object)
         context_data["formset"] = formset
         return context_data
+
+    def create_cron_trigger(self):
+        expr = f"{self.object.date_start_send.minute} {self.object.date_start_send.hour} {self.object.periodicity}"
+
+        cron_trigger = CronTrigger.from_crontab(expr=expr)
+        cron_trigger.start_date = self.object.date_start_send
+        cron_trigger.end_date = self.object.date_end_send
+
+        return cron_trigger
+
+    def form_valid(self, form):  # Переопределение метода form_valid
+        context_data = self.get_context_data()  # Получение контекста
+        formset = context_data["formset"]  # Получение формсета
+        if formset.is_valid() and form.is_valid():  # Если форма и формсет валидны
+            form.save()  # Сохранение формы
+            formset.save()  # Сохранение формсета
+            return super().form_valid(form)  # Вызов родительского метода form_valid
+        else:
+            return self.render_to_response(self.get_context_data(form=form))  # Возврат страницы с формой и формсетом
