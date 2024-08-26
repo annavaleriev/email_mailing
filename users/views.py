@@ -50,8 +50,83 @@ def email_verification(request, token):
         },
         {
             "app_label": 'services',
+            "model": 'client',
+            "codename": 'add_client',
+        },
+        {
+            "app_label": 'services',
+            "model": 'client',
+            "codename": 'change_client',
+        },
+        {
+            "app_label": 'services',
+            "model": 'client',
+            "codename": 'delete_client',
+        },
+        {
+            "app_label": 'services',
             "model": 'sendmail',
             "codename": 'add_sendmail',
+        },
+        {
+            "app_label": 'services',
+            "model": 'sendmail',
+            "codename": 'change_sendmail',
+        },
+        {
+            "app_label": 'services',
+            "model": 'sendmail',
+            "codename": 'delete_sendmail',
+        },
+        {
+            "app_label": 'services',
+            "model": 'sendmail',
+            "codename": 'view_sendmail',
+        },
+        {
+            "app_label": 'services',
+            "model": 'Message',
+            "codename": 'add_message',
+        },
+        {
+            "app_label": 'services',
+            "model": 'Message',
+            "codename": 'change_message',
+        },
+        {
+            "app_label": 'services',
+            "model": 'Message',
+            "codename": 'delete_message',
+        },
+        {
+            "app_label": 'services',
+            "model": 'Message',
+            "codename": 'view_message',
+        },
+        {
+            "app_label": 'services',
+            "model": 'Logs',
+            "codename": 'view_logs',
+        },
+        {
+            "app_label": 'services',
+            "model": 'Article',
+            "codename": 'add_article',
+        },
+        {
+            "app_label": 'services',
+            "model": 'Article',
+            "codename": 'change_article',
+        },
+        {
+            "app_label": 'services',
+            "model": 'Article',
+            "codename": 'delete_article',
+        },
+        {
+            "app_label": 'services',
+            "model": 'Article',
+            "codename": 'view_article',
         },
     )
 

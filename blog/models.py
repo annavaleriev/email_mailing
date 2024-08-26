@@ -11,6 +11,9 @@ class Article(models.Model):
     created = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
     published = models.BooleanField(verbose_name="Признак публикации", default=True)
     views = models.PositiveIntegerField(verbose_name="Количество просмотров", default=0)
+    owner = models.ForeignKey(
+        "users.User", verbose_name="Автор", on_delete=models.CASCADE, related_name="articles"
+    )
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.slug = self.title
