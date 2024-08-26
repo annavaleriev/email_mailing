@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "includes/base.html" %}
 
-</body>
-</html>
+{% block content %}
+    <form class="row d-flex align-items-center justify-content-center" method="post" enctype="multipart/form-data">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Удалить клиента {{ object.last_name }} {{ object.first_name }} {{ object.email }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn bg-danger">Подтвердить</button>
+                    <a href="{% url 'services:client_list' %}" class="btn btn-warning">Отмена</a>
+                </div>
+                <div class="card-footer"></div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

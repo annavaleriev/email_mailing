@@ -1,10 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "includes/base.html" %}
 
-</body>
-</html>
+{% block content %}
+
+    <!-- Блок для отображения сообщений -->
+    {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col text-end">
+                    <a href="{% url 'services:add_client' %}" class="btn btn-primary mb-3">Добавить клиента</a>
+                </div>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% for object in object_list %}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <!-- Имя клиента выделено жирным черным -->
+                                <p class="card-text"><strong>{{ object }}</strong></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a type="button" class="btn btn-sm btn-outline-secondary"
+                                           href="{% url 'services:client_detail' object.pk %}">Инфо о клиенте</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Нет клиентов для отображения.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

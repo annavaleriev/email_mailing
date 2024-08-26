@@ -1,0 +1,41 @@
+{% extends "includes/base.html" %}
+
+{% block content %}
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col d-flex justify-content-between">
+                    <!-- Кнопка "Добавить рассылку" -->
+                    {% if user.is_superuser or not user.can_block_user %}
+                        <a href="{% url 'services:add_mailing' %}" class="btn btn-primary mb-3">Добавить рассылку</a>
+                    {% endif %}
+                    <!-- Кнопка "Статистика моих рассылок" -->
+                    {% if user.is_superuser or not user.can_block_user %}
+                        <a href="{% url 'services:my_mailing_statistics' %}" class="btn btn-info mb-3">Статистика моих рассылок</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% for object in object_list %}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <strong>Клиенты:</strong> {{ object.clients.all|join:", " }}<br>
+                                    <strong>Статус:</strong> {{ object.get_status_display }}<br>
+                                    <strong>Запланированное время:</strong> {{ object.date_start_send|date:"d M Y H:i" }}<br>
+                                </p>
+                                <div class="btn-group">
+                                    <a type="button" class="btn btn-sm btn-outline-secondary"
+                                       href="{% url 'services:sendmail_detail' object.pk %}">Инфо о рассылке</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Нет рассылки для отображения.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

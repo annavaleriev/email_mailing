@@ -1,0 +1,39 @@
+{#<!-- services/templates/services/logs_list.html -->#}
+{#{% extends "includes/base.html" %}#}
+{##}
+{#{% block content %}#}
+{#<h1>Статистика моих рассылок</h1>#}
+{##}
+{#{% if object_list %}#}
+{#    <ul>#}
+{#        {% for log in object_list %}#}
+{#            <li>{{ log.date_and_time_last_send }} - {{ log.status_send }}</li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#{% else %}#}
+{#    <p>Нет доступных логов для отображения.</p>#}
+{#{% endif %}#}
+{#{% endblock %}#}
+
+{% extends "includes/base.html" %}
+
+{% block content %}
+
+{% if object_list %}
+    <ul>
+        {% for log in object_list %}
+            <li>
+                <strong>Дата и время последней отправки:</strong> {{ log.date_and_time_last_send|date:"d.m.Y H:i" }}<br>
+                <strong>Статус отправки:</strong> {% if log.status_send %}Успешно{% else %}Неудачно{% endif %}<br>
+                <strong>Ответ сервера:</strong> {{ log.server_message }}<br>
+                <strong>Клиенты:</strong> {{ log.send_mail.clients.all|join:", " }}<br>
+                <strong>Периодичность:</strong> {{ log.send_mail.get_periodicity_display }}<br>
+                <strong>Статус рассылки:</strong> {{ log.send_mail.get_status_display }}<br>
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Нет доступных логов для отображения.</p>
+{% endif %}
+{% endblock %}

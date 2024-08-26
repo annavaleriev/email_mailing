@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "services",
     "users",
+    "django_apscheduler",
+    "blog",
 ]
 
 MIDDLEWARE = [
@@ -58,7 +61,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "services.urls"
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
@@ -88,6 +91,8 @@ DATABASES = {
         "NAME": "services",
         "USER": "postgres",
         "PASSWORD": os.getenv("DATABASE_PASSWORD"),
+        "PORT": os.getenv("DATABASE_PORT"),
+        "HOST": os.getenv("DATABASE_HOST"),
     }
 }
 
@@ -116,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "ru-ru"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 
@@ -137,18 +142,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = "smtp.yandex.ru"
-# EMAIL_PORT = 465
-#
-# EMAIL_HOST_USER = os.getenv("EMAIL_USER")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
-# EMAIL_USE_SSL = True
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.yandex.ru"
+EMAIL_PORT = 465
 
-# SERVER_EMAIL = EMAIL_HOST_USER
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_USER = os.getenv("EMAIL_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
+EMAIL_USE_SSL = True
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 AUTH_USER_MODEL = "users.User"
 
-# LOGIN_REDIRECT_URL = "/"  # редирект после успешного входа на главную страницу
-# LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = reverse_lazy("services:home")
+LOGOUT_REDIRECT_URL = reverse_lazy("user:login")

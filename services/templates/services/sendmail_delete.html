@@ -1,0 +1,24 @@
+{% extends "includes/base.html" %}
+{% block content %}
+<div class="col-12">
+    <form class="row d-flex align-items-center justify-content-center" method="post" enctype="multipart/form-data">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Удалить рассылку {{ object.clients }}  {{ object.status }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn bg-danger">Подтвердить</button>
+                    <a href="{% url 'services:home' %}" class="btn btn-warning">Отмена</a>
+{#                    <a href="{% url 'home' %}" class="btn btn-warning">Отмена</a>#}
+                </div>
+                <div class="card-footer"></div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
