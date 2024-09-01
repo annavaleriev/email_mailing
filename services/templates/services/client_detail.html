@@ -36,10 +36,14 @@
                     </div>
                 </div>
                 <div class="card-footer"></div>
+                {% if user.is_superuser or user.change_client %}
                 <a type="button" class="btn btn-sl btn-outline-secondary"
                    href="{% url 'services:client_update' object.pk %}">Редактировать</a>
+                {% endif %}
+                {% if user.is_superuser or user.delete_client %}
                 <a type="button" class="btn btn-sl btn-outline-secondary"
                    href="{% url 'services:client_delete' object.pk %}">Удалить</a>
+                {% endif %}
             </div>
         </div>
     </form>

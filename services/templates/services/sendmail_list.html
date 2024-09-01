@@ -6,11 +6,11 @@
             <div class="row mb-5">
                 <div class="col d-flex justify-content-between">
                     <!-- Кнопка "Добавить рассылку" -->
-                    {% if user.is_superuser or not user.can_block_user %}
+                    {% if user.is_superuser or user.add_sendmail %}
                         <a href="{% url 'services:add_mailing' %}" class="btn btn-primary mb-3">Добавить рассылку</a>
                     {% endif %}
                     <!-- Кнопка "Статистика моих рассылок" -->
-                    {% if user.is_superuser or not user.can_block_user %}
+                    {% if user.is_superuser or user.view_logs %}
                         <a href="{% url 'services:my_mailing_statistics' %}" class="btn btn-info mb-3">Статистика моих рассылок</a>
                     {% endif %}
                 </div>

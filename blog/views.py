@@ -4,6 +4,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from blog.forms import ArticleForm
 from blog.models import Article
+from services.mixins import StatisticMixin
 
 
 class ArticleViewMixin:
@@ -11,7 +12,6 @@ class ArticleViewMixin:
 
     model = Article
     form_class = ArticleForm
-    # fields = ["title", "body", "image"]  # указываем поля, которые будут в форме
     template_name = "blog/article_form.html"
 
 
@@ -34,7 +34,7 @@ class ArticleUpdateView(
         # возвращаем URL, на который будет перенаправлен
 
 
-class ArticleListView(ListView):  # создаем класс BlogListView, который наследуется от ListView
+class ArticleListView(StatisticMixin, ListView):  # создаем класс BlogListView, который наследуется от ListView
     """Список статей"""
 
     model = Article  # указываем модель, с которой будет работать наш класс
