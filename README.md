@@ -12,6 +12,7 @@ PostgreSQL
 Установка и настройка
 Клонируйте репозиторий:
 git clone https://github.com/yourusername/mailing-service.git
+
 Перейдите в директорию проекта:
 cd mailing-service
 Создайте и активируйте виртуальное окружение:
