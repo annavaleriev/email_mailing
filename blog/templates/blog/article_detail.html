@@ -1,0 +1,26 @@
+{% extends 'includes/base.html' %}
+
+{% load my_tags %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12">
+                <div class="card shadow-sm">
+                    <img class="card-img-top" src="{% media object.image %}" alt="{{ object.title }}">
+                    <div class="card-body text-center">
+                        <h5>{{ object.title }}</h5>
+                        <p class="card-text">{{ object.body }}</p>
+                        {% if user.is_superuser or user == object.owner %}
+                        <div class="d-flex flex-column align-items-center">
+                            <a class="btn btn-sl btn-outline-secondary mb-2 w-75" href="{% url 'blog:edit' pk=object.id %}">Редактировать</a>
+                            <a class="btn btn-sl btn-outline-secondary w-75" href="{% url 'blog:delete' pk=object.id %}">Удалить</a>
+                        </div>
+                        {% endif %}
+                        <small class="text-muted mt-3">Просмотры: {{ object.views }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

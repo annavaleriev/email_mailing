@@ -1,0 +1,50 @@
+{% extends "includes/base.html" %}
+
+{% block content %}
+    <form class="row d-flex align-items-center justify-content-center" method="post" enctype="multipart/form-data">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        Полная информация о клиенте
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <th>Фамилия</th>
+                                <td>{{ object.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Имя</th>
+                                <td>{{ object.first_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Отчество</th>
+                                <td>{{ object.surname }}</td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td>{{ object.email }}</td>
+                            </tr>
+                            <tr>
+                                <th>Комментарий</th>
+                                <td>{{ object.comment }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer"></div>
+                {% if user.is_superuser or user.change_client %}
+                <a type="button" class="btn btn-sl btn-outline-secondary"
+                   href="{% url 'services:client_update' object.pk %}">Редактировать</a>
+                {% endif %}
+                {% if user.is_superuser or user.delete_client %}
+                <a type="button" class="btn btn-sl btn-outline-secondary"
+                   href="{% url 'services:client_delete' object.pk %}">Удалить</a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,14 @@
+[
+  {
+    "model": "services.client",
+    "pk": 12,
+    "fields": {
+      "owner": 2,
+      "first_name": "Anna",
+      "last_name": "Filenko",
+      "surname": "asdasdasdsad",
+      "email": "filenko.a@gmail.com",
+      "comment": ""
+    }
+  }
+]

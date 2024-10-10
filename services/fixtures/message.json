@@ -1,0 +1,29 @@
+[
+  {
+    "model": "services.message",
+    "pk": 38,
+    "fields": {
+      "subject": "выаываыв",
+      "body": "авыавыаываыва",
+      "send_mail": 46
+    }
+  },
+  {
+    "model": "services.message",
+    "pk": 39,
+    "fields": {
+      "subject": "апавыапыва213123213123",
+      "body": "выаываыв2313123",
+      "send_mail": 48
+    }
+  },
+  {
+    "model": "services.message",
+    "pk": 40,
+    "fields": {
+      "subject": "sdfsdffdsdfsdfdfs12341233123123213213",
+      "body": "1232131231232131231",
+      "send_mail": 79
+    }
+  }
+]

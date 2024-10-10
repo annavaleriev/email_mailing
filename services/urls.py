@@ -1,22 +1,22 @@
-"""
-URL configuration for services project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
 from django.urls import path
 
+from services.apps import ServicesConfig
+from services.views import (ClientCreateView, ClientDeleteView, ClientDetailView, ClientListView, ClientUpdateView,
+                            LogsListView, SendMailCreateView, SendMailDeleteView, SendMailDetailView, SendMailListView,
+                            SendMailUpdateView)
+
+app_name = ServicesConfig.name
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("", SendMailListView.as_view(), name="home"),
+    path("clients/", ClientListView.as_view(), name="client_list"),
+    path("clients/<int:pk>/", ClientDetailView.as_view(), name="client_detail"),
+    path("add-client/", ClientCreateView.as_view(), name="add_client"),
+    path("clients/<int:pk>/update/", ClientUpdateView.as_view(), name="client_update"),
+    path("clients/<int:pk>/delete/", ClientDeleteView.as_view(), name="client_delete"),
+    path("mailing/<int:pk>/", SendMailDetailView.as_view(), name="sendmail_detail"),
+    path("mailing/add/", SendMailCreateView.as_view(), name="add_mailing"),
+    path("mailing/<int:pk>/update/", SendMailUpdateView.as_view(), name="sendmail_update"),
+    path("mailing/<int:pk>/delete/", SendMailDeleteView.as_view(), name="sendmail_delete"),
+    path("my-mailing-statistics/", LogsListView.as_view(), name="my_mailing_statistics"),
 ]

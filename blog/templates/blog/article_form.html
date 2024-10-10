@@ -1,0 +1,73 @@
+{% extends "includes/base.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="card-title">
+                            {% if object %}
+                                Редактирование статьи
+                            {% else %}
+                                Создание статьи
+                            {% endif %}
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <!-- Обработка ошибок формы -->
+                            {% if form.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    Пожалуйста, исправьте ошибки в форме ниже.
+                                </div>
+                            {% endif %}
+
+                            <!-- Поля формы -->
+                            <div class="form-group">
+                                <label for="{{ form.title.id_for_label }}">Заголовок</label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger">
+                                        {{ form.title.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.body.id_for_label }}">Содержание</label>
+                                {{ form.body }}
+                                {% if form.body.errors %}
+                                    <div class="text-danger">
+                                        {{ form.body.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.image.id_for_label }}">Изображение</label>
+                                {{ form.image }}
+                                {% if form.image.errors %}
+                                    <div class="text-danger">
+                                        {{ form.image.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Кнопка отправки формы -->
+                            <button type="submit" class="btn btn-primary mt-3">
+                                {% if object %}
+                                    Сохранить
+                                {% else %}
+                                    Создать
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
