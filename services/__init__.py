@@ -9,7 +9,7 @@ DATABASE = settings.DATABASES["default"]  # Получение настроек 
 job_stores = {  # Создание хранилища задач
     "default": SQLAlchemyJobStore(  # Использование SQLAlchemyJobStore
         url=f'postgresql://{DATABASE["USER"]}:{DATABASE["PASSWORD"]}'  # Подключение к базе данных
-            f'@{DATABASE["HOST"]}:{DATABASE["PORT"]}/{DATABASE["NAME"]}'  # Подключение к базе данных
+        f'@{DATABASE["HOST"]}:{DATABASE["PORT"]}/{DATABASE["NAME"]}'  # Подключение к базе данных
     )
 }
 

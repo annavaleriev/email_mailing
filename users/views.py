@@ -44,89 +44,89 @@ def email_verification(request, token):
     """Подтверждение почты"""
     user_permissions = (
         {
-            "app_label": 'services',
-            "model": 'client',
-            "codename": 'view_client',
+            "app_label": "services",
+            "model": "client",
+            "codename": "view_client",
         },
         {
-            "app_label": 'services',
-            "model": 'client',
-            "codename": 'add_client',
+            "app_label": "services",
+            "model": "client",
+            "codename": "add_client",
         },
         {
-            "app_label": 'services',
-            "model": 'client',
-            "codename": 'change_client',
+            "app_label": "services",
+            "model": "client",
+            "codename": "change_client",
         },
         {
-            "app_label": 'services',
-            "model": 'client',
-            "codename": 'delete_client',
+            "app_label": "services",
+            "model": "client",
+            "codename": "delete_client",
         },
         {
-            "app_label": 'services',
-            "model": 'sendmail',
-            "codename": 'add_sendmail',
+            "app_label": "services",
+            "model": "sendmail",
+            "codename": "add_sendmail",
         },
         {
-            "app_label": 'services',
-            "model": 'sendmail',
-            "codename": 'change_sendmail',
+            "app_label": "services",
+            "model": "sendmail",
+            "codename": "change_sendmail",
         },
         {
-            "app_label": 'services',
-            "model": 'sendmail',
-            "codename": 'delete_sendmail',
+            "app_label": "services",
+            "model": "sendmail",
+            "codename": "delete_sendmail",
         },
         {
-            "app_label": 'services',
-            "model": 'sendmail',
-            "codename": 'view_sendmail',
+            "app_label": "services",
+            "model": "sendmail",
+            "codename": "view_sendmail",
         },
         {
-            "app_label": 'services',
-            "model": 'Message',
-            "codename": 'add_message',
+            "app_label": "services",
+            "model": "Message",
+            "codename": "add_message",
         },
         {
-            "app_label": 'services',
-            "model": 'Message',
-            "codename": 'change_message',
+            "app_label": "services",
+            "model": "Message",
+            "codename": "change_message",
         },
         {
-            "app_label": 'services',
-            "model": 'Message',
-            "codename": 'delete_message',
+            "app_label": "services",
+            "model": "Message",
+            "codename": "delete_message",
         },
         {
-            "app_label": 'services',
-            "model": 'Message',
-            "codename": 'view_message',
+            "app_label": "services",
+            "model": "Message",
+            "codename": "view_message",
         },
         {
-            "app_label": 'services',
-            "model": 'Logs',
-            "codename": 'view_logs',
+            "app_label": "services",
+            "model": "Logs",
+            "codename": "view_logs",
         },
         {
-            "app_label": 'services',
-            "model": 'Article',
-            "codename": 'add_article',
+            "app_label": "services",
+            "model": "Article",
+            "codename": "add_article",
         },
         {
-            "app_label": 'services',
-            "model": 'Article',
-            "codename": 'change_article',
+            "app_label": "services",
+            "model": "Article",
+            "codename": "change_article",
         },
         {
-            "app_label": 'services',
-            "model": 'Article',
-            "codename": 'delete_article',
+            "app_label": "services",
+            "model": "Article",
+            "codename": "delete_article",
         },
         {
-            "app_label": 'services',
-            "model": 'Article',
-            "codename": 'view_article',
+            "app_label": "services",
+            "model": "Article",
+            "codename": "view_article",
         },
     )
 
@@ -136,11 +136,8 @@ def email_verification(request, token):
     if created:
         permissions = [
             Permission.objects.filter(
-                content_type=ContentType.objects.get(
-                    app_label=perm['app_label'],
-                    model=perm['model']
-                ),
-                codename=perm['codename']
+                content_type=ContentType.objects.get(app_label=perm["app_label"], model=perm["model"]),
+                codename=perm["codename"],
             ).first()
             for perm in user_permissions
         ]

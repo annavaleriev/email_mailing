@@ -1,0 +1,184 @@
+[
+  {
+    "model": "services.sendmail",
+    "pk": 46,
+    "fields": {
+      "owner": 1,
+      "is_active": false,
+      "date_start_send": "2024-08-22T14:14:00Z",
+      "date_end_send": "2024-08-22T14:14:00Z",
+      "periodicity": "* * 0",
+      "status": "created",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 48,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-22T14:25:00Z",
+      "date_end_send": "2024-08-22T14:25:00Z",
+      "periodicity": "1 * *",
+      "status": "created",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 66,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-19T17:35:00Z",
+      "date_end_send": "2024-08-20T17:33:00Z",
+      "periodicity": "* * *",
+      "status": "created",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 67,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-19T17:42:00Z",
+      "date_end_send": "2024-08-21T17:40:00Z",
+      "periodicity": "* * *",
+      "status": "created",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 68,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-19T17:50:00Z",
+      "date_end_send": "2024-08-23T17:48:00Z",
+      "periodicity": "* * *",
+      "status": "error",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 69,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-19T17:56:00Z",
+      "date_end_send": "2024-08-21T17:54:00Z",
+      "periodicity": "* * *",
+      "status": "created",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 70,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-19T17:59:00Z",
+      "date_end_send": "2024-08-21T17:58:00Z",
+      "periodicity": "* * *",
+      "status": "created",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 71,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-19T17:05:00Z",
+      "date_end_send": "2024-08-28T18:03:00Z",
+      "periodicity": "* * *",
+      "status": "error",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 72,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-19T18:06:00Z",
+      "date_end_send": "2024-08-22T18:05:00Z",
+      "periodicity": "* * *",
+      "status": "error",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 73,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-21T17:02:00Z",
+      "date_end_send": "2024-08-22T17:00:00Z",
+      "periodicity": "* * *",
+      "status": "created",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 74,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-21T17:10:00Z",
+      "date_end_send": "2024-08-22T17:08:00Z",
+      "periodicity": "* * *",
+      "status": "error",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 75,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-21T17:39:00Z",
+      "date_end_send": "2024-08-22T17:37:00Z",
+      "periodicity": "* * *",
+      "status": "error",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 76,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-21T17:42:00Z",
+      "date_end_send": "2024-08-24T17:41:00Z",
+      "periodicity": "* * 0",
+      "status": "created",
+      "clients": []
+    }
+  },
+  {
+    "model": "services.sendmail",
+    "pk": 77,
+    "fields": {
+      "owner": 1,
+      "is_active": true,
+      "date_start_send": "2024-08-23T15:17:00Z",
+      "date_end_send": "2024-08-24T15:15:00Z",
+      "periodicity": "* * *",
+      "status": "error",
+      "clients": []
+    }
+  }
+]

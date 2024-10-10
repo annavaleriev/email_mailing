@@ -6,8 +6,8 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from services import scheduler
 from services.forms import AddClientForm, SendMailForm
 from services.mailing_job import my_job
-from services.mixins import CreateViewMixin, SendMailFormsetMixin, StatisticMixin, ClientOwnerQuerysetViewMixin, \
-    SendmailOwnerQuerysetViewMixin
+from services.mixins import (ClientOwnerQuerysetViewMixin, CreateViewMixin, SendMailFormsetMixin,
+                             SendmailOwnerQuerysetViewMixin, StatisticMixin)
 from services.models import Client, Logs, SendMail
 
 
@@ -98,8 +98,9 @@ class SendMailCreateView(LoginRequiredMixin, CreateViewMixin, SendMailFormsetMix
         return form  # Возврат формы
 
 
-class SendMailUpdateView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, SendMailFormsetMixin, StatisticMixin,
-                         UpdateView):
+class SendMailUpdateView(
+    LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, SendMailFormsetMixin, StatisticMixin, UpdateView
+):
     """Редактирование рассылки"""
 
     def get_context_data(self, **kwargs):
@@ -108,7 +109,7 @@ class SendMailUpdateView(LoginRequiredMixin, SendmailOwnerQuerysetViewMixin, Sen
         formset = context["formset"].form
 
         if not (
-                self.request.user.is_superuser or self.request.user.can_disable_sendmail
+            self.request.user.is_superuser or self.request.user.can_disable_sendmail
         ):  # прописать условия для супер и менеджера
             form.base_fields["is_active"].widget = HiddenInput()
 

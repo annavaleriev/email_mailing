@@ -1,0 +1,104 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$l3R22hLKMNQTo2nieI0Eck$GExRB0TMbsB9+xVW/5XzYFj16HTdGaI5/0Lo4pUAt7s=",
+      "last_login": "2024-10-10T16:01:18.560Z",
+      "is_superuser": true,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-07-28T11:01:57.471Z",
+      "email": "filenko.a@gmail.com",
+      "phone": "234234234",
+      "avatar": "",
+      "token": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$tMWMnbnsR1YbKZUn2p8VQK$U8E4nIn5w7Ai54nyY9Tj3O/1/mI9e9kyMckkGtBAiis=",
+      "last_login": "2024-09-01T14:38:37.731Z",
+      "is_superuser": false,
+      "first_name": "Manager",
+      "last_name": "Manager",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-07-29T14:55:37Z",
+      "email": "manager@manager.manager",
+      "phone": null,
+      "avatar": "",
+      "token": null,
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$kUmr49WSfwbVanuQZwh2gM$cyGXxLFTF0fDDVmwJFDfhWp4V/IR6trMse0faVgB8SU=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Анна",
+      "last_name": "Филенко",
+      "is_staff": false,
+      "is_active": false,
+      "date_joined": "2024-08-04T15:17:10.481Z",
+      "email": "annafilenko@yandex.ru",
+      "phone": "501109312",
+      "avatar": "",
+      "token": "32a025b3d5be727a1f5b5fa383c95e1f",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$zQg0JvER2iFYOAVkZD4puv$l3bBHnLPcCe1PN2jUsXIj54kpENiwgmxc7ogUf4WyTs=",
+      "last_login": "2024-08-12T14:59:24.151Z",
+      "is_superuser": false,
+      "first_name": "Anna",
+      "last_name": "Filenko",
+      "is_staff": false,
+      "is_active": false,
+      "date_joined": "2024-08-04T15:21:12.514Z",
+      "email": "anna.filenko@skyeng.ru",
+      "phone": "501109312",
+      "avatar": "",
+      "token": "3128baa57d59ca5cc9cda6f3476f2779",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 6,
+    "fields": {
+      "password": "12345",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Иван",
+      "last_name": "Иванов",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-08-24T17:03:15Z",
+      "email": "filenko1@gmail.com",
+      "phone": "-",
+      "avatar": "",
+      "token": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

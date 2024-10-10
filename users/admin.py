@@ -10,7 +10,7 @@ class UserAdmin(admin.ModelAdmin):
     exclude = ("password",)
     filter_horizontal = ("groups", "user_permissions")
 
-    actions = ['block_user']  # Добавляем метод block_user в список действий
+    actions = ["block_user"]  # Добавляем метод block_user в список действий
 
     def block_user(self, request, queryset):
         """Метод для блокировки пользователя"""
